@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 
 import StableSwapABI from "../../abi/StableSwap.json";
 import { toDisplayNumber } from "../../utils/formatValues";
-
+import {getArthToUSD} from '../../utils/api'
 import * as telegram from "../../output/telegram";
 import * as discord from "../../output/discord";
 
@@ -28,7 +28,7 @@ const telegramTemplate = (
 
 ${dots}
 
-*1 ARTH* = *$${constants.getArthToUSD()}*
+*1 ARTH* = *$${getArthToUSD()}*
 
 [📶 Transaction Hash 📶 ](https://polygonscan.com/tx/${transactionHash})
 `;
@@ -54,7 +54,7 @@ const discordTemplate = (
 
 ${dots}
 
-*1 ARTH* = *$${constants.getArthToUSD()}*
+*1 ARTH* = *$${getArthToUSD()}*
 
 [📶 Transaction Hash 📶 ](https://polygonscan.com/tx/${transactionHash})
 `;

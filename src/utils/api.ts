@@ -1,6 +1,6 @@
-const rp = require("request-promise");
+import rp = require("request-promise");
 
-const getMahaPrice = async () => {
+export const getMahaPrice = async () => {
   const mahaToUsdPrice = await rp(
     `https://api.coingecko.com/api/v3/simple/price?ids=mahadao&vs_currencies=usd`
   );
@@ -11,7 +11,7 @@ const getMahaPrice = async () => {
   return mahaToUsd;
 };
 
-const getEthToMahaPrice = async () => {
+export const getEthToMahaPrice = async () => {
   const mahaToEthPrice = await rp(
     `https://api.coingecko.com/api/v3/simple/price?ids=mahadao&vs_currencies=eth`
   );
@@ -22,7 +22,7 @@ const getEthToMahaPrice = async () => {
   return ethToMaha;
 };
 
-const getArthToUSD = async () => {
+export const getArthToUSD = async () => {
   const arthToUsdPrice = await rp(
     `https://api.coingecko.com/api/v3/simple/price?ids=arth&vs_currencies=usd`
   );
@@ -33,7 +33,7 @@ const getArthToUSD = async () => {
   return arthToUsd;
 };
 
-const tvlAprFn = async () => {
+export const tvlAprFn = async () => {
   const data = JSON.parse(await rp("https://api.arthcoin.com/apy/loans"));
 
   const tvlAprObj = {
@@ -49,7 +49,7 @@ const tvlAprFn = async () => {
   return tvlAprObj;
 };
 
-const poolTokenVal = async () => {
+export const poolTokenVal = async () => {
   const options = {
     method: "POST",
     uri: "https://api.arthcoin.com/apy/lp",
@@ -59,10 +59,4 @@ const poolTokenVal = async () => {
   return data;
 };
 
-module.exports = {
-  getMahaPrice,
-  getEthToMahaPrice,
-  getArthToUSD,
-  tvlAprFn,
-  poolTokenVal,
-};
+

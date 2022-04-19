@@ -1,5 +1,5 @@
 import nconf from "nconf";
-import { Client, Intents, MessageEmbed } from "discord.js";
+import { Client, Intents, MessageEmbed, TextChannel } from "discord.js";
 
 const client = new Client({
   intents: [
@@ -29,14 +29,14 @@ client.on("messageCreate", (msg) => {
   if (msg.content.toLowerCase() == "maha") msg.channel.send("DAO");
 });
 
-client.login(nconf.get("DISCORD_TOKEN")); //login bot using token
+client.login(nconf.get("MAHA_DiscordClientToken")); //login bot using token
 
-export const sendMessage = (channelName: string, messageMarkdown: string) => {
+export const sendMessage = (channelName: any, messageMarkdown: string) => {
   const channel = client.channels.cache.get(channelName);
 
   const discordMsgEmbed = new MessageEmbed()
     .setColor("#F07D55")
     .setDescription(messageMarkdown);
 
-  if (channel) channel.send({ embeds: [discordMsgEmbed] });
+  if (channel) (channel as TextChannel).send({ embeds: [discordMsgEmbed] });
 };

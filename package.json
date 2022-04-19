@@ -21,7 +21,8 @@
     "prepare": "npm run build",
     "test": "mocha",
     "upgrade": "npx npm-check -u",
-    "version": "npm run build && npm run changelog:update"
+    "version": "npm run build && npm run changelog:update",
+    "start": "ts-node src/bots/arthloans/farming.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
@@ -44,10 +45,13 @@
   },
   "dependencies": {
     "@discordjs/builders": "^0.13.0",
+    "@types/numeral": "^2.0.2",
+    "@types/request-promise": "^4.1.48",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "ethers": "^5.6.4",
     "moment": "^2.29.3",
+    "nconf": "^0.12.0",
     "node-telegram-bot-api": "^0.56.0",
     "nodemon": "^2.0.15",
     "numeral": "^2.0.6",
