@@ -16,7 +16,7 @@ const mahaXBot = async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     votingEscrowAbi,
-    nconf.get('Matic_VotingEscrow')
+    '0x8F2C37D2F8AE7Bce07aa79c768CC03AB0E5ae9aE'
   );
 
   let mahaToUsdPrice = await rp(
@@ -34,8 +34,7 @@ const mahaXBot = async () => {
   ).toPrecision(6);
 
   mahaxContract.events
-    .allEvents(
-      { address: nconf.get('Matic_VotingEscrow') })
+    .allEvents()
     .on("connected", (nr:any) => {
       console.log("connected", nr);
     })

@@ -1,10 +1,7 @@
 import nconf from "nconf";
-nconf.argv().env().file({ file: '../../../config.json' });
-
 import Web3 from 'web3'
 
 import farmingAbi from "../../abi/BasicStaking.json";
-// import {farmingTelgramMsg, farmingDiscordMsg} from "../../utils/msgToBeSent";
 import {msgToBeSent} from '../../utils/msgToBeSent'
 
 import * as telegram from '../../output/telegram'
@@ -15,15 +12,15 @@ const basicStaking = [
     contrat: [
       {
         lpTokenName: "ARTH.usd+3pool",
-        lpTokenAdrs: nconf.get('MaticMain_BSArthUsd3Pool'),
+        lpTokenAdrs: '0x245AE0bBc1E31e7279F0835cE8E93127A13a3781',
       },
       {
         lpTokenName: "ARTH/USDC LP",
-        lpTokenAdrs: nconf.get('MaticMain_BSArthUsdc'),
+        lpTokenAdrs: '0xD585bfCF37db3C2507e2D44562F0Dbe2E4ec37Bc',
       },
       {
         lpTokenName: "ARTH/MAHA LP",
-        lpTokenAdrs: nconf.get('MaticMain_BSArthMaha'),
+        lpTokenAdrs: '0xc82c95666be4e89aed8ae10bab4b714cae6655d5',
       },
     ],
     chainWss: nconf.get('MAINNET_MATIC'),
@@ -33,15 +30,15 @@ const basicStaking = [
     contrat: [
       {
         lpTokenName: "ARTH.usd+3eps",
-        lpTokenAdrs: nconf.get('BscMain_BSArthUsd3eps'),
+        lpTokenAdrs: '0x8fF204D06B39a19Bd8c8367302bfCB329214c14B',
       },
       {
         lpTokenName: "ARTH/BUSD LP",
-        lpTokenAdrs: nconf.get('BscMain_BSArthBusdc'),
+        lpTokenAdrs: '0xe8b16cab47505708a093085926560a3eb32584b8',
       },
       {
         lpTokenName: "ARTH/MAHA LP",
-        lpTokenAdrs: nconf.get('BscMain_BSArthMaha'),
+        lpTokenAdrs: '0x7699d230Ba47796fc2E13fba1D2D52Ecb0318c33',
       },
     ],
     chainWss: nconf.get('MAINNET_BSC'),
@@ -51,9 +48,9 @@ const basicStaking = [
 
 export const farming = async () => {
 
-  console.log('test', nconf.get("MAHA_DiscordChannel"))
   basicStaking.map((farm) => {
     farm.contrat.map((cont) => {
+
       new new Web3(farm.chainWss).eth.Contract(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
@@ -118,8 +115,8 @@ export const farming = async () => {
         })
         .on("changed", (changed:any) => console.log("changed", changed))
         .on("error", (err:any) => console.log("error farming", err));
+
     });
   });
 };
 
-farming();

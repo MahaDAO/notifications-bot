@@ -22,7 +22,7 @@
     "test": "mocha",
     "upgrade": "npx npm-check -u",
     "version": "npm run build && npm run changelog:update",
-    "start": "ts-node src/bots/arthloans/farming.ts"
+    "start": "ts-node index.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.1.6",
@@ -45,8 +45,10 @@
   },
   "dependencies": {
     "@discordjs/builders": "^0.13.0",
+    "@types/coingecko-api": "^1.0.10",
     "@types/numeral": "^2.0.2",
     "@types/request-promise": "^4.1.48",
+    "coingecko-api": "^1.0.10",
     "discord.js": "^13.6.0",
     "dotenv": "^16.0.0",
     "ethers": "^5.6.4",

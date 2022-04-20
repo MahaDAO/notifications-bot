@@ -14,7 +14,7 @@ const quickSwap = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     vyperContractAbi,
-    nconf.get('Vyper_Contract')
+    '0xDdE5FdB48B2ec6bc26bb4487f8E3a4EB99b3d633'
   );
 
   vyperContract.events
