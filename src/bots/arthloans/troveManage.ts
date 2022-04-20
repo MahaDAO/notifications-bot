@@ -39,15 +39,15 @@ const troveContracts = [
     chainWss: nconf.get('MAINNET_BSC'),
     contracts: [
       {
-        poolName: 'BUSD',
+        poolName: 'Busd',
         poolAdrs: '0x1Beb8b4911365EabEC68459ecfe9172f174BF0DB'
       },
       {
-        poolName: 'MAHA',
+        poolName: 'Maha',
         poolAdrs: '0xD31AC58374D4a0b3C58dFF36f2F59A22348159DB'
       },
       {
-        poolName: 'WBNB',
+        poolName: 'Wbnb',
         poolAdrs: '0x8F2C37D2F8AE7Bce07aa79c768CC03AB0E5ae9aE'
       },
       {

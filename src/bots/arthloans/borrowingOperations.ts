@@ -19,13 +19,17 @@ const borrowingContracts = [
         collAdrs: '0x5F3fD21232C976773233f8E5F5d6564cf2820512'
       },
       {
-        collName: 'Wdai',
+        collName: 'Dai',
         collAdrs: '0x240AE60633D340AEDDE68F57AF47D26bf270b8f6'
       },
       {
         collName: 'Wmatic',
         collAdrs: '0x87FfC8AD29A87bD4a5F1927b0f8991b18dED8787'
       },
+      {
+        collName: 'USDCUSDT-QLP-S',
+        collAdrs: '0x123086374B0fCe322EbDb7CBbFe454856Ef88524'
+      }
     ],
   },
   {
@@ -41,9 +45,17 @@ const borrowingContracts = [
         collAdrs: '0x20B8B7BA955617b8661D88709698DA15005cdCb3'
       },
       {
-        collName: 'Wbusd',
+        collName: 'Busd',
         collAdrs: '0x36a669C9CF3e225c5F73efe065074f7D88a69fd8'
       },
+      {
+        collName: 'BUSDUSDC-APE-LP-S',
+        collAdrs: '0x3f3cdCC49599600EeaF7c6e11Da2E377BDEE95cA'
+      },
+      {
+        collName: 'BUSDUSDT-APE-LP-S',
+        collAdrs: '0xE4E773433Be8cc3ABDa9Bb5393C97336F27AE76b'
+      }
     ],
 
   }
