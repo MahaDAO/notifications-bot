@@ -55,7 +55,7 @@
     "sitka": "^1.0.5",
     "twitter-api-client": "^1.5.2",
     "twitter-lite": "^1.1.0",
-    "underscore": "^1.13.2",
+    "underscore": "^1.13.3",
     "web3": "^1.7.3",
     "web3-providers-ws": "^1.7.3"
   }
