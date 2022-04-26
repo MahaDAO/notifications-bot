@@ -29,7 +29,11 @@ client.on("messageCreate", (msg) => {
   if (msg.content.toLowerCase() == "maha") msg.channel.send("DAO");
 });
 
-client.login(nconf.get("MAHA_DiscordClientToken")); //login bot using token
+const DISCORD_TOKEN = nconf.get('MAHA_DiscordClientToken') // for production
+// const DISCORD_TOKEN = nconf.get('Test_DISCORD_TOKEN') // for testing
+
+
+client.login(DISCORD_TOKEN); //login bot using token
 
 export const sendMessage = (channelName: any, messageMarkdown: string) => {
   const channel = client.channels.cache.get(channelName);

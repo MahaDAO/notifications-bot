@@ -38,14 +38,15 @@ export const tvlAprFn = async () => {
 
   const tvlAprObj = {
     bsc: {
-      tvl: data.chainSpecificData["56"].tvl.arthMahaApe.toLocaleString(),
-      apr: data.chainSpecificData["56"].apr.arthMahaApe.toLocaleString(),
+      tvl: data.chainSpecificData["56"].tvl,
+      apr: data.chainSpecificData["56"].apr,
     },
     polygon: {
-      tvl: data.chainSpecificData["137"].tvl.arthMaha.toLocaleString(),
-      apr: data.chainSpecificData["137"].apr.arthMaha.toLocaleString(),
+      tvl: data.chainSpecificData["137"].tvl,
+      apr: data.chainSpecificData["137"].apr,
     },
   };
+  console.log('tvlAprObj', tvlAprObj)
   return tvlAprObj;
 };
 
@@ -58,5 +59,4 @@ export const poolTokenVal = async () => {
 
   return data;
 };
-
 

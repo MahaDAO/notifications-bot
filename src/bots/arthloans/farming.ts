@@ -7,6 +7,12 @@ import {msgToBeSent} from '../../utils/msgToBeSent'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
 
+const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
+// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
+
+// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
+const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+
 const basicStaking = [
   {
     contrat: [
@@ -40,6 +46,14 @@ const basicStaking = [
         lpTokenName: "ARTH/MAHA LP",
         lpTokenAdrs: '0x7699d230Ba47796fc2E13fba1D2D52Ecb0318c33',
       },
+      {
+        lpTokenName: "ARTH.usd+val3eps",
+        lpTokenAdrs: "0x6398C73761a802a7Db8f6418Ef0a299301bC1Fb0"
+      },
+      {
+        lpTokenName: "ARTH/MAHA Ape LP",
+        lpTokenAdrs: "0x1599a0A579aD3Fc86DBe6953dfEc04eb365dd8e6"
+      },
     ],
     chainWss: nconf.get('MAINNET_BSC'),
     chainName: "BSC Mainnet",
@@ -50,18 +64,27 @@ export const farming = async () => {
 
   basicStaking.map((farm) => {
     farm.contrat.map((cont) => {
-
-      new new Web3(farm.chainWss).eth.Contract(
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        farmingAbi,
-        cont.lpTokenAdrs
-      ).events
+      const contract = new new Web3(farm.chainWss).eth.Contract(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+         // @ts-ignore
+         farmingAbi,
+         cont.lpTokenAdrs
+      )
+      // setInterval(() => {
+      //   contract.methods.balanceOf('0x61837551968B5496c63EbCC82cBfE2C8e1Fe798c').call()
+      //     .then((res:any) => {
+      //       // console.log('res', res)
+      //     }).catch((e:any) => console.log('interval error', e))
+      // }, 3000)
+      contract.events
         .allEvents()
         .on("connected", (nr:any) =>
           console.log(`connected ${farm.chainName} ${cont.lpTokenName}`)
         )
         .on("data", async (data:any) => {
+          // lastCheck = Date.now();
+          // currentUpdateTime = new Date()
+          // websocketHealth(moment(currentUpdateTime))
           console.log("data", data);
           let telegramMsg = "";
           let discordMsg = "";
@@ -105,16 +128,19 @@ export const farming = async () => {
             );
           }
           telegram.sendMessage(
-            nconf.get("TELEGRAM_CHAT_ID"),
+            TELEGRAM_CHAT_ID,
             telegramMsg
           )
           discord.sendMessage(
-            nconf.get("MAHA_DiscordChannel"),
+            DISCORD_STAKING_CHANNEL,
             discordMsg
           )
         })
         .on("changed", (changed:any) => console.log("changed", changed))
-        .on("error", (err:any) => console.log("error farming", err));
+        .on("error", (err:any) => {
+          console.log("error farming", err)
+
+        });
 
     });
   });

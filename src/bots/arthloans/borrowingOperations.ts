@@ -15,15 +15,15 @@ const borrowingContracts = [
     chainWss: nconf.get('MAINNET_MATIC'),
     contract: [
       {
-        collName: 'Weth',
+        collName: 'WETH',
         collAdrs: '0x5F3fD21232C976773233f8E5F5d6564cf2820512'
       },
       {
-        collName: 'Dai',
+        collName: 'DAI',
         collAdrs: '0x240AE60633D340AEDDE68F57AF47D26bf270b8f6'
       },
       {
-        collName: 'Wmatic',
+        collName: 'WMATIC',
         collAdrs: '0x87FfC8AD29A87bD4a5F1927b0f8991b18dED8787'
       },
       {
@@ -37,15 +37,15 @@ const borrowingContracts = [
     chainWss: nconf.get('MAINNET_BSC'),
     contract: [
       {
-        collName: 'Maha',
+        collName: 'MAHA',
         collAdrs: '0xd55555376f9A43229Dc92abc856AA93Fee617a9A'
       },
       {
-        collName: 'Wbnb',
+        collName: 'WBNB',
         collAdrs: '0x20B8B7BA955617b8661D88709698DA15005cdCb3'
       },
       {
-        collName: 'Busd',
+        collName: 'BUSD',
         collAdrs: '0x36a669C9CF3e225c5F73efe065074f7D88a69fd8'
       },
       {
