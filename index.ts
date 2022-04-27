@@ -4,9 +4,9 @@ nconf.argv()
    .env()
    .file({ file: './config.json' });
 
-// import {farming} from './src/bots/arthloans/farming'
-import curvePolygon from './src/events/exchange/curvePolygon'
+import {farming} from './src/bots/arthloans/farming'
+// import curvePolygon from './src/events/exchange/curvePolygon'
 
-// farming()
+farming()
 
-curvePolygon()
+// curvePolygon()

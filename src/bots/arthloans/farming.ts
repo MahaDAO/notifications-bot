@@ -58,6 +58,20 @@ const basicStaking = [
     chainWss: nconf.get('MAINNET_BSC'),
     chainName: "BSC Mainnet",
   },
+  {
+    contrat: [
+      {
+        lpTokenName: "MAHA/ETH SushiSwap",
+        lpTokenAdrs: '0x20257283d7B8Aa42FC00bcc3567e756De1E7BF5a',
+      },
+      {
+        lpTokenName: "FRAX/ARTH.usd Curve",
+        lpTokenAdrs: '0x7B2F31Fe97f32760c5d6A4021eeA132d44D22039',
+      },
+    ],
+    chainWss: nconf.get('MAINNET_ETH'),
+    chainName: "Ethereum",
+  },
 ];
 
 export const farming = async () => {
@@ -76,6 +90,7 @@ export const farming = async () => {
       //       // console.log('res', res)
       //     }).catch((e:any) => console.log('interval error', e))
       // }, 3000)
+
       contract.events
         .allEvents()
         .on("connected", (nr:any) =>
