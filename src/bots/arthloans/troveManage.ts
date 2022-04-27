@@ -9,6 +9,12 @@ import {msgToBeSent} from '../../utils/msgToBeSent'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
 
+const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
+// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
+
+// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
+const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+
 // For Redeem and Liquidate
 
 const troveContracts = [
@@ -84,11 +90,11 @@ const troveManage = () => {
           }
 
           telegram.sendMessage(
-            nconf.get("TELEGRAM_EXCHANGE_CHATID"),
+            TELEGRAM_CHAT_ID,
             telegramMsg
           )
           discord.sendMessage(
-            nconf.get("DISCORD_EXCHANGE_CHANNEL"),
+            DISCORD_STAKING_CHANNEL,
             discordMsg
           )
 
@@ -98,4 +104,4 @@ const troveManage = () => {
 
 }
 
-troveManage()
+export default troveManage

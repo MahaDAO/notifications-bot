@@ -10,8 +10,8 @@ import * as discord from '../../output/discord'
 const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
 // const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
 
-// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
-const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
+// const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
 
 const basicStaking = [
   {
@@ -48,7 +48,7 @@ const basicStaking = [
       },
       {
         lpTokenName: "ARTH.usd+val3eps",
-        lpTokenAdrs: "0x6398C73761a802a7Db8f6418Ef0a299301bC1Fb0"
+        lpTokenAdrs: "0x41efe9ad56d328449439c330b327ca496c3e38bb"
       },
       {
         lpTokenName: "ARTH/MAHA Ape LP",
@@ -74,7 +74,7 @@ const basicStaking = [
   },
 ];
 
-export const farming = async () => {
+const farming = async () => {
 
   basicStaking.map((farm) => {
     farm.contrat.map((cont) => {
@@ -84,22 +84,23 @@ export const farming = async () => {
          farmingAbi,
          cont.lpTokenAdrs
       )
-      // setInterval(() => {
-      //   contract.methods.balanceOf('0x61837551968B5496c63EbCC82cBfE2C8e1Fe798c').call()
-      //     .then((res:any) => {
-      //       // console.log('res', res)
-      //     }).catch((e:any) => console.log('interval error', e))
-      // }, 3000)
+
+      let lastCheck = Date.now()
+
+      setInterval(() => {
+        if (lastCheck < Date.now() - (60 * 1000 * 10)) {
+          process.exit();
+        }
+      }, 3000)
 
       contract.events
         .allEvents()
-        .on("connected", (nr:any) =>
+        .on("connected", (nr: any) =>
           console.log(`connected ${farm.chainName} ${cont.lpTokenName}`)
         )
-        .on("data", async (data:any) => {
-          // lastCheck = Date.now();
-          // currentUpdateTime = new Date()
-          // websocketHealth(moment(currentUpdateTime))
+        .on("data", async (data: any) => {
+          lastCheck = Date.now();
+
           console.log("data", data);
           let telegramMsg = "";
           let discordMsg = "";
@@ -142,6 +143,7 @@ export const farming = async () => {
               cont.lpTokenName,
             );
           }
+
           telegram.sendMessage(
             TELEGRAM_CHAT_ID,
             telegramMsg
@@ -161,3 +163,4 @@ export const farming = async () => {
   });
 };
 
+export default farming

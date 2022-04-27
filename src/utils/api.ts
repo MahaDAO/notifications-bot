@@ -46,7 +46,7 @@ export const tvlAprFn = async () => {
       apr: data.chainSpecificData["137"].apr,
     },
   };
-  console.log('tvlAprObj', tvlAprObj)
+
   return tvlAprObj;
 };
 

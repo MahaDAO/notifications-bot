@@ -18,7 +18,7 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
   let tvl = "";
   let apr = "";
   let msg = "";
-  let poolLPVal = 0;
+  let poolLPVal = 1;
   let swapName;
   // let mahaToken = ''
   const tvlApr = await tvlAprFn();
@@ -31,16 +31,17 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
 
     if (poolName == "ARTH.usd+3pool"){
       poolLPVal = lpPoolValObj.arthUsdc3Polygon
-      tvl = tvlApr.polygon.tvl.arthu3pool
+      tvl = tvlApr.polygon.tvl.arthu3pool.toLocaleString()
       apr = tvlApr.polygon.apr.arthu3pool
     }
     if (poolName === "ARTH/USDC LP"){
       poolLPVal = lpPoolValObj.arthUsdcPolygon
-      tvl = tvlApr.polygon.tvl.arthUsdc
+      tvl = tvlApr.polygon.tvl.arthUsdc.toLocaleString()
+      apr = ''
     }
     if (poolName === "ARTH/MAHA LP"){
       poolLPVal = lpPoolValObj.arthMahaPolygon
-      tvl = tvlApr.polygon.tvl.arthMaha
+      tvl = tvlApr.polygon.tvl.arthMaha.toLocaleString()
       apr = tvlApr.polygon.apr.arthMaha
     }
 
@@ -53,26 +54,52 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
 
     if (poolName == "ARTH.usd+3eps"){
       poolLPVal = lpPoolValObj.arthUsdc3Bsc
-      tvl = tvlApr.bsc.tvl['arthu3eps-v2']
-      apr = tvlApr.bsc.apr['arthu3eps-v2']
+      tvl = ''
+      apr = tvlApr.bsc.apr['arthu3eps']
     }
     if (poolName === "ARTH/BUSD LP"){
       poolLPVal = lpPoolValObj.arthBusdBsc
-      tvl = tvlApr.bsc.tvl.arthBusd
+      tvl = tvlApr.bsc.tvl.arthBusd.toLocaleString()
+      apr = ''
     }
     if (poolName === "ARTH/MAHA LP"){
       poolLPVal = lpPoolValObj.arthMahaBsc
-      tvl = tvlApr.bsc.tvl.arthMaha
+      tvl = tvlApr.bsc.tvl.arthMaha.toLocaleString()
+      apr = ''
     }
     if (poolName === "ARTH.usd+val3eps"){
       poolLPVal = lpPoolValObj.arthMahaBsc
-      tvl = tvlApr.bsc.tvl["arthu3valeps-v2"]
+      tvl = tvlApr.bsc.tvl["arthu3valeps-v2"].toLocaleString()
       apr = tvlApr.bsc.apr["arthu3valeps-v2"]
     }
     if (poolName === "ARTH/MAHA Ape LP"){
       poolLPVal = lpPoolValObj.arthMahaBsc
-      tvl = tvlApr.bsc.tvl.arthMahaApe
+      tvl = tvlApr.bsc.tvl.arthMahaApe.toLocaleString()
       apr = tvlApr.bsc.apr.arthMahaApe
+    }
+  }
+  if(chain == "Ethereum"){
+    chainLink = 'https://etherscan.io'
+
+    if(poolName === "MAHA/ETH SushiSwap"){
+      poolLPVal = 0
+      tvl = ''
+      apr = ''
+    }
+    if(poolName === "FRAX/ARTH.usd Curve"){
+      poolLPVal = 0
+      tvl = ''
+      apr = ''
+    }
+    if(poolName === 'WETH'){
+      poolLPVal = 0
+      tvl = ''
+      apr = ''
+    }
+    if(poolName === 'FXS'){
+      poolLPVal = 0
+      tvl = ''
+      apr = ''
     }
   }
 
@@ -147,7 +174,7 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
     else eventVal = format.toDisplayNumber(data.returnValues.amount);
     msg = `*${eventVal} ${poolName} ($${Numeral(parseFloat(eventVal) * poolLPVal).format(
       "0.000"
-    )})* tokens has been staked on **${swapName} ${poolName} Staking Program** by [${eventUser}](${url})}`;
+    )})* tokens has been staked on **${swapName} ${poolName} Staking Program** by [${eventUser}](${url})`;
     noOfTotalDots = Math.ceil((parseFloat(eventVal) * poolLPVal) / 100);
   }
   if (data.event === "Withdrawn") {
@@ -192,12 +219,14 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
   const msgToReturn = `
 ${msg}
 
-${dots.length ? dots : ""}
-
+${dots.length === 0 ?
+  '' :
+`${dots}
+`}${poolValues === '' ? '' : `
 ${poolValues}
-
-TVL in this pool: *$${tvl}*
-New APR: *${apr}%*
+`}${tvl === '' ? '' : `
+TVL in this pool: *$`+ tvl + `*`}${ apr === '' ? '' : `
+New APR: *` + Numeral(apr).format("0.000") +`%*`}
 
 [📶 Transaction Hash 📶 ](${chainLink}/tx/${data.transactionHash})
   `;

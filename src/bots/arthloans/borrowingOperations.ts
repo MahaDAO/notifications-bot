@@ -7,6 +7,12 @@ import {msgToBeSent} from '../../utils/msgToBeSent'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
 
+const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
+// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
+
+// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
+const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+
 // For Create, Update, Close the loan
 
 const borrowingContracts = [
@@ -58,6 +64,21 @@ const borrowingContracts = [
       }
     ],
 
+  },
+  {
+    chainName: 'Ethereum',
+    chainWss: nconf.get('MAINNET_ETH'),
+    contract: [
+      {
+        collName: 'WETH',
+        collAdrs: '0xE28bc1785a7DedFef0eA8890C238A6377c756106'
+      },
+      {
+        collName: 'FXS',
+        collAdrs: '0x98280255Db799E9aD303A34EBf745ee53B404117'
+      }
+    ],
+
   }
 ]
 
@@ -81,12 +102,12 @@ const borrowingOperations = () => {
             discordMsg = await msgToBeSent(event, borrowContract.chainName, adrs.collName)
 
             telegram.sendMessage(
-              nconf.get("TELEGRAM_EXCHANGE_CHATID"),
+              TELEGRAM_CHAT_ID,
               telegramMsg
             )
 
             discord.sendMessage(
-              nconf.get("DISCORD_EXCHANGE_CHANNEL"),
+              DISCORD_STAKING_CHANNEL,
               discordMsg
             )
           }
@@ -97,4 +118,4 @@ const borrowingOperations = () => {
 
 }
 
-borrowingOperations()
+export default borrowingOperations

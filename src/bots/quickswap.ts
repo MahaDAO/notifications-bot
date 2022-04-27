@@ -7,6 +7,12 @@ import * as discord from '../output/discord'
 import {toDisplayNumber} from '../utils/formatValues'
 import {getArthToUSD} from '../utils/api'
 
+const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
+// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
+
+// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
+const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+
 const quickSwap = () => {
 
   const web3Vyper = new Web3(nconf.get('MAINNET_MATIC'));
@@ -116,11 +122,11 @@ ${dots}
       }
 
       telegram.sendMessage(
-        nconf.get("TELEGRAM_EXCHANGE_CHATID"),
+        TELEGRAM_CHAT_ID,
         telegramMsg
       )
       discord.sendMessage(
-        nconf.get("DISCORD_EXCHANGE_CHANNEL"),
+        DISCORD_STAKING_CHANNEL,
         discordMsg
       )
     })
@@ -128,4 +134,4 @@ ${dots}
     .on("error", (err:any) => console.log("error", err));
 };
 
-quickSwap();
+export default quickSwap;
