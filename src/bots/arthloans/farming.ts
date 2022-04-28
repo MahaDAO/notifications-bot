@@ -17,6 +17,20 @@ const basicStaking = [
   {
     contrat: [
       {
+        lpTokenName: "MAHA/ETH SushiSwap",
+        lpTokenAdrs: '0x20257283d7B8Aa42FC00bcc3567e756De1E7BF5a',
+      },
+      {
+        lpTokenName: "FRAX/ARTH.usd Curve",
+        lpTokenAdrs: '0x7B2F31Fe97f32760c5d6A4021eeA132d44D22039',
+      },
+    ],
+    chainWss: nconf.get('MAINNET_ETH1'),
+    chainName: "Ethereum",
+  },
+  {
+    contrat: [
+      {
         lpTokenName: "ARTH.usd+3pool",
         lpTokenAdrs: '0x245AE0bBc1E31e7279F0835cE8E93127A13a3781',
       },
@@ -29,14 +43,14 @@ const basicStaking = [
         lpTokenAdrs: '0xc82c95666be4e89aed8ae10bab4b714cae6655d5',
       },
     ],
-    chainWss: nconf.get('MAINNET_MATIC'),
+    chainWss: nconf.get('MAINNET_MATIC1'),
     chainName: "Polygon Mainnet",
   },
   {
     contrat: [
       {
         lpTokenName: "ARTH.usd+3eps",
-        lpTokenAdrs: '0x8fF204D06B39a19Bd8c8367302bfCB329214c14B',
+        lpTokenAdrs: '0x6398c73761a802a7db8f6418ef0a299301bc1fb0',
       },
       {
         lpTokenName: "ARTH/BUSD LP",
@@ -55,38 +69,26 @@ const basicStaking = [
         lpTokenAdrs: "0x1599a0A579aD3Fc86DBe6953dfEc04eb365dd8e6"
       },
     ],
-    chainWss: nconf.get('MAINNET_BSC'),
+    chainWss: nconf.get('MAINNET_BSC1'),
     chainName: "BSC Mainnet",
   },
-  {
-    contrat: [
-      {
-        lpTokenName: "MAHA/ETH SushiSwap",
-        lpTokenAdrs: '0x20257283d7B8Aa42FC00bcc3567e756De1E7BF5a',
-      },
-      {
-        lpTokenName: "FRAX/ARTH.usd Curve",
-        lpTokenAdrs: '0x7B2F31Fe97f32760c5d6A4021eeA132d44D22039',
-      },
-    ],
-    chainWss: nconf.get('MAINNET_ETH'),
-    chainName: "Ethereum",
-  },
+
 ];
 
 const farming = async () => {
 
   basicStaking.map((farm) => {
+    const web3 = new Web3(farm.chainWss)
+
     farm.contrat.map((cont) => {
-      const contract = new new Web3(farm.chainWss).eth.Contract(
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-         // @ts-ignore
+      const contract = new web3.eth.Contract(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
          farmingAbi,
          cont.lpTokenAdrs
       )
 
       let lastCheck = Date.now()
-
       setInterval(() => {
         if (lastCheck < Date.now() - (60 * 1000 * 10)) {
           process.exit();

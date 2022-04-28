@@ -7,7 +7,7 @@ import * as discord from '../output/discord'
 import {toDisplayNumber} from '../utils/formatValues'
 import {getArthToUSD} from '../utils/api'
 
-const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
+const DISCORD_STAKING_CHANNEL = nconf.get("BuySell_DiscordChannel") // for production
 // const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
 
 // const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
@@ -15,7 +15,7 @@ const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
 
 const quickSwap = () => {
 
-  const web3Vyper = new Web3(nconf.get('MAINNET_MATIC'));
+  const web3Vyper = new Web3(nconf.get('MAINNET_MATIC1'));
   const vyperContract = new web3Vyper.eth.Contract(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

@@ -4,16 +4,11 @@ import {getCollateralPrices} from './getCollateralPrices'
 import {getMahaPrice, getArthToUSD, tvlAprFn, poolTokenVal} from "./api";
 import format = require("./formatValues");
 
-
-let allCollateralPrices:any
-const priceFn = async() => {
-  allCollateralPrices = await getCollateralPrices()
-  console.log('allCollateralPrices', allCollateralPrices)
-}
-
-priceFn()
-
 export const msgToBeSent = async(data: any, chain: string, poolName: string) => {
+const allCollateralPrices:any = await getCollateralPrices()
+
+  console.log('allCollateralPrices', allCollateralPrices)
+
   let chainLink = "";
   let tvl = "";
   let apr = "";
@@ -44,6 +39,26 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
       tvl = tvlApr.polygon.tvl.arthMaha.toLocaleString()
       apr = tvlApr.polygon.apr.arthMaha
     }
+    if(poolName === "WETH"){
+      poolLPVal = allCollateralPrices.WETH.toLocaleString()
+      tvl = ''
+      apr = ''
+    }
+    if(poolName === "DAI"){
+      poolLPVal = allCollateralPrices.DAI.toLocaleString()
+      tvl = ''
+      apr = ''
+    }
+    if(poolName === "WMATIC"){
+      poolLPVal = allCollateralPrices.WMATIC.toLocaleString()
+      tvl = ''
+      apr = ''
+    }
+    if(poolName === "USDCUSDT-QLP-S"){
+      poolLPVal = 1
+      tvl = ''
+      apr = ''
+    }
 
   }
   if (chain == "BSC Mainnet") {
@@ -55,7 +70,7 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
     if (poolName == "ARTH.usd+3eps"){
       poolLPVal = lpPoolValObj.arthUsdc3Bsc
       tvl = ''
-      apr = tvlApr.bsc.apr['arthu3eps']
+      apr = tvlApr.bsc.apr['arthu3eps-v2']
     }
     if (poolName === "ARTH/BUSD LP"){
       poolLPVal = lpPoolValObj.arthBusdBsc
@@ -68,36 +83,61 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
       apr = ''
     }
     if (poolName === "ARTH.usd+val3eps"){
-      poolLPVal = lpPoolValObj.arthMahaBsc
+      poolLPVal = 1
       tvl = tvlApr.bsc.tvl["arthu3valeps-v2"].toLocaleString()
       apr = tvlApr.bsc.apr["arthu3valeps-v2"]
     }
     if (poolName === "ARTH/MAHA Ape LP"){
-      poolLPVal = lpPoolValObj.arthMahaBsc
+      poolLPVal = 1
       tvl = tvlApr.bsc.tvl.arthMahaApe.toLocaleString()
       apr = tvlApr.bsc.apr.arthMahaApe
+    }
+    if (poolName === "MAHA"){
+      poolLPVal = allCollateralPrices.MAHA.toLocaleString()
+      tvl = ''
+      apr = ''
+    }
+    if (poolName === "WBNB"){
+      poolLPVal = allCollateralPrices.WBNB.toLocaleString()
+      tvl = ''
+      apr = ''
+    }
+    if (poolName === "BUSD"){
+      poolLPVal = allCollateralPrices.BUSD.toLocaleString()
+      tvl = ''
+      apr = ''
+    }
+    if (poolName === "BUSDUSDC-APE-LP-S"){
+      poolLPVal = 1
+      tvl = ''
+      apr = ''
+    }
+    if (poolName === "BUSDUSDT-APE-LP-S"){
+      poolLPVal = 1
+      tvl = ''
+      apr = ''
     }
   }
   if(chain == "Ethereum"){
     chainLink = 'https://etherscan.io'
 
     if(poolName === "MAHA/ETH SushiSwap"){
-      poolLPVal = 0
+      poolLPVal = 1
       tvl = ''
       apr = ''
     }
     if(poolName === "FRAX/ARTH.usd Curve"){
-      poolLPVal = 0
+      poolLPVal = 1
       tvl = ''
       apr = ''
     }
     if(poolName === 'WETH'){
-      poolLPVal = 0
+      poolLPVal = allCollateralPrices.WETH.toLocaleString()
       tvl = ''
       apr = ''
     }
     if(poolName === 'FXS'){
-      poolLPVal = 0
+      poolLPVal = allCollateralPrices.FRAX.toLocaleString()
       tvl = ''
       apr = ''
     }
@@ -146,15 +186,15 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
     )} ${poolName}.`;
 
     poolValues = `
-      *1 ${poolName}* = *$${allCollateralPrices.poolName}*
-      *1 ARTH* = *$${await getArthToUSD()}*
+*1 ${poolName}* = *$${allCollateralPrices[`${poolName}`]}*
+*1 ARTH* = *$${await getArthToUSD()}*
     `
   }
   if (data.returnValues.operation == "1") {
     // not getting any values in this event
     msg = `A Loan has been closed by [${data.returnValues._borrower}](https://polygonscan.com/address/${data.returnValues._borrower})`;
     poolValues = `
-      *1 ${poolName}* = *$${allCollateralPrices.poolName}*
+      *1 ${poolName}* = *$${allCollateralPrices[`${poolName}`]}*
       *1 ARTH* = *$${await getArthToUSD()}*
   `
   }
@@ -162,7 +202,7 @@ export const msgToBeSent = async(data: any, chain: string, poolName: string) => 
     // not getting any values in this event
     msg = `A Loan has been modified by [${data.returnValues._borrower}](https://polygonscan.com/address/${data.returnValues._borrower})`;
     poolValues = `
-      *1 ${poolName}* = *$${allCollateralPrices.poolName}*
+      *1 ${poolName}* = *$${allCollateralPrices[`${poolName}`]}*
       *1 ARTH* = *$${await getArthToUSD()}*
   `
   }

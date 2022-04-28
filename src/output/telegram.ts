@@ -10,5 +10,8 @@ export const sendMessage = (chatId: string, messageMarkdown: string) => {
   bot.sendMessage(chatId, messageMarkdown, {
     parse_mode: "Markdown",
     disable_web_page_preview: true
-  });
+  })
+  // .catch((err: any) => {
+  //   console.log('telegram err', err)
+  // })
 };

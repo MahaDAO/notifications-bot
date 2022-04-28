@@ -3,19 +3,22 @@ import nconf from "nconf";
 nconf.argv()
    .env()
    .file({ file: './config.json' });
-// import borrowingOperations from './src/bots/arthloans/borrowingOperations';
-// import leverage from './src/bots/arthloans/leverage'
-// import troveManager from './src/bots/arthloans/troveManage'
-// import mahax from './src/bots/gov/mahax'
-// import quickswap from './src/bots/quickswap'
-// import curvePolygon from './src/events/exchange/curvePolygon'
+import borrowingOperations from './src/bots/arthloans/borrowingOperations';
+import leverage from './src/bots/arthloans/leverage'
 import farming from './src/bots/arthloans/farming'
+import mahax from './src/bots/gov/mahax'
+import quickswap from './src/bots/quickswap'
+import curvePolygon from './src/events/exchange/curvePolygon'
+import troveManager from './src/bots/arthloans/troveManage'
 
-// borrowingOperations()
-// leverage()
-// troveManager()
-// mahax()
-// quickswap()
-// curvePolygon()
-farming()
+// At a time 13 connections can be open
 
+borrowingOperations() // 11 instances
+leverage() // 2 instances
+
+farming() // 10 instances
+mahax() // 1 instance
+quickswap() // 1 instance
+curvePolygon() // 1 instance
+
+troveManager() // 8 instances

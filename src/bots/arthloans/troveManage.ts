@@ -9,7 +9,7 @@ import {msgToBeSent} from '../../utils/msgToBeSent'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
 
-const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
+const DISCORD_STAKING_CHANNEL = nconf.get("ArthLoan_DiscordChannel") // for production
 // const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
 
 // const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
@@ -20,7 +20,7 @@ const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
 const troveContracts = [
   {
     chainName: 'Polygon Mainnet',
-    chainWss: nconf.get('MAINNET_MATIC'),
+    chainWss: nconf.get('MAINNET_MATIC2'),
     contracts: [
       {
         poolName: 'Weth',
@@ -42,7 +42,7 @@ const troveContracts = [
   },
   {
     chainName: 'BSC Mainnet',
-    chainWss: nconf.get('MAINNET_BSC'),
+    chainWss: nconf.get('MAINNET_BSC2'),
     contracts: [
       {
         poolName: 'Busd',
@@ -77,7 +77,7 @@ const troveManage = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         troveManagerAbi, adrs.poolAdrs).events.allEvents()
-        .on('connected', (nr:any) => console.log(`connected ${troveContract.chainName} ${adrs.poolName}`))
+        .on('connected', (nr:any) => console.log(`connected trove ${troveContract.chainName} ${adrs.poolName}`))
         .on('data', async(event:any) => {
 
           console.log('troveManagerContract', event)
@@ -87,16 +87,18 @@ const troveManage = () => {
           if(event.event == 'TroveLiquidated' || event.event == 'Redemption'){
             telegramMsg = await msgToBeSent(event, troveContract.chainName, adrs.poolName)
             discordMsg = await msgToBeSent(event, troveContract.chainName, adrs.poolName)
+
+            telegram.sendMessage(
+              TELEGRAM_CHAT_ID,
+              telegramMsg
+            )
+            discord.sendMessage(
+              DISCORD_STAKING_CHANNEL,
+              discordMsg
+            )
           }
 
-          telegram.sendMessage(
-            TELEGRAM_CHAT_ID,
-            telegramMsg
-          )
-          discord.sendMessage(
-            DISCORD_STAKING_CHANNEL,
-            discordMsg
-          )
+
 
         })
     })

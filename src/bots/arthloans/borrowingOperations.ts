@@ -7,7 +7,7 @@ import {msgToBeSent} from '../../utils/msgToBeSent'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
 
-const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
+const DISCORD_STAKING_CHANNEL = nconf.get("ArthLoan_DiscordChannel") // for production
 // const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
 
 // const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
@@ -16,6 +16,21 @@ const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
 // For Create, Update, Close the loan
 
 const borrowingContracts = [
+  {
+    chainName: 'Ethereum',
+    chainWss: nconf.get('MAINNET_ETH'),
+    contract: [
+      {
+        collName: 'WETH',
+        collAdrs: '0xE28bc1785a7DedFef0eA8890C238A6377c756106'
+      },
+      {
+        collName: 'FXS',
+        collAdrs: '0x98280255Db799E9aD303A34EBf745ee53B404117'
+      }
+    ],
+
+  },
   {
     chainName: 'Polygon Mainnet',
     chainWss: nconf.get('MAINNET_MATIC'),
@@ -64,33 +79,20 @@ const borrowingContracts = [
       }
     ],
 
-  },
-  {
-    chainName: 'Ethereum',
-    chainWss: nconf.get('MAINNET_ETH'),
-    contract: [
-      {
-        collName: 'WETH',
-        collAdrs: '0xE28bc1785a7DedFef0eA8890C238A6377c756106'
-      },
-      {
-        collName: 'FXS',
-        collAdrs: '0x98280255Db799E9aD303A34EBf745ee53B404117'
-      }
-    ],
-
   }
 ]
 
 const borrowingOperations = () => {
 
   borrowingContracts.map((borrowContract: any) => {
+    const web3 = new Web3(borrowContract.chainWss)
+
     borrowContract.contract.map((adrs: any) => {
-      new (new Web3(borrowContract.chainWss)).eth.Contract(
+      new web3.eth.Contract(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         borrowerOperationsAbi, adrs.collAdrs).events.allEvents()
-        .on('connected', (nr:any) => console.log(`connected ${borrowContract.chainName} ${adrs.collName}`))
+        .on('connected', (nr:any) => console.log(`connected borrow ${borrowContract.chainName} ${adrs.collName}`))
         .on('data', async(event:any) => {
 
           console.log('borrowContract', event)
