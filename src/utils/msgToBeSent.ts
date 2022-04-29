@@ -157,8 +157,8 @@ const allCollateralPrices:any = await getCollateralPrices()
     )} Arth.`;
     noOfTotalDots = Math.ceil(parseFloat(eventVal) / 100);
     poolValues = `
-      *1 MAHA* = *$${await getMahaPrice()}*
-      *1 ARTH* = *$${await getArthToUSD()}*
+*1 MAHA* = *$${await getMahaPrice()}*
+*1 ARTH* = *$${await getArthToUSD()}*
     `
   }
   if (data.event == "Redemption") {
@@ -168,8 +168,8 @@ const allCollateralPrices:any = await getCollateralPrices()
     )} MAHA`;
     noOfTotalDots = Math.ceil(parseFloat(eventVal) / 100);
     poolValues = `
-      *1 MAHA* = *$${await getMahaPrice()}*
-      *1 ARTH* = *$${await getArthToUSD()}*
+*1 MAHA* = *$${await getMahaPrice()}*
+*1 ARTH* = *$${await getArthToUSD()}*
     `
   }
 
@@ -194,16 +194,16 @@ const allCollateralPrices:any = await getCollateralPrices()
     // not getting any values in this event
     msg = `A Loan has been closed by [${data.returnValues._borrower}](https://polygonscan.com/address/${data.returnValues._borrower})`;
     poolValues = `
-      *1 ${poolName}* = *$${allCollateralPrices[`${poolName}`]}*
-      *1 ARTH* = *$${await getArthToUSD()}*
+*1 ${poolName}* = *$${allCollateralPrices[`${poolName}`]}*
+*1 ARTH* = *$${await getArthToUSD()}*
   `
   }
   if (data.returnValues.operation == "2") {
     // not getting any values in this event
     msg = `A Loan has been modified by [${data.returnValues._borrower}](https://polygonscan.com/address/${data.returnValues._borrower})`;
     poolValues = `
-      *1 ${poolName}* = *$${allCollateralPrices[`${poolName}`]}*
-      *1 ARTH* = *$${await getArthToUSD()}*
+*1 ${poolName}* = *$${allCollateralPrices[`${poolName}`]}*
+*1 ARTH* = *$${await getArthToUSD()}*
   `
   }
 
@@ -257,7 +257,7 @@ const allCollateralPrices:any = await getCollateralPrices()
   }
 
   const msgToReturn = `
-${msg}
+🚀  ${msg}
 
 ${dots.length === 0 ?
   '' :

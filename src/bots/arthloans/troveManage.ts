@@ -8,12 +8,7 @@ import {msgToBeSent} from '../../utils/msgToBeSent'
 
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
-
-const DISCORD_STAKING_CHANNEL = nconf.get("ArthLoan_DiscordChannel") // for production
-// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
-
-// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
-const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+import { config } from '../../utils/config';
 
 // For Redeem and Liquidate
 
@@ -69,7 +64,7 @@ const troveContracts = [
 ]
 
 // For Redeem and Liquidate
-const troveManage = () => {
+const troveManage = (mode: any) => {
 
   troveContracts.map((troveContract) => {
     troveContract.contracts.map((adrs) => {
@@ -89,11 +84,11 @@ const troveManage = () => {
             discordMsg = await msgToBeSent(event, troveContract.chainName, adrs.poolName)
 
             telegram.sendMessage(
-              TELEGRAM_CHAT_ID,
+              mode === 'production' ? config().production.TELEGRAM_CHAT_ID : config().staging.TELEGRAM_CHAT_ID,
               telegramMsg
             )
             discord.sendMessage(
-              DISCORD_STAKING_CHANNEL,
+              mode === 'production' ? config().production.DISCORD.troveManage : config().staging.DISCORD,
               discordMsg
             )
           }

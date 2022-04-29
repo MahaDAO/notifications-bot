@@ -3,15 +3,9 @@ import Web3 from 'web3'
 
 import farmingAbi from "../../abi/BasicStaking.json";
 import {msgToBeSent} from '../../utils/msgToBeSent'
-
+import {config} from '../../utils/config'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
-
-const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
-// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
-
-const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
-// const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
 
 const basicStaking = [
   {
@@ -75,7 +69,9 @@ const basicStaking = [
 
 ];
 
-const farming = async () => {
+const farming = async (mode: any) => {
+
+  console.log('config', config)
 
   basicStaking.map((farm) => {
     const web3 = new Web3(farm.chainWss)
@@ -147,11 +143,11 @@ const farming = async () => {
           }
 
           telegram.sendMessage(
-            TELEGRAM_CHAT_ID,
+            mode === 'production' ? config().production.TELEGRAM_CHAT_ID : config().staging.TELEGRAM_CHAT_ID,
             telegramMsg
           )
           discord.sendMessage(
-            DISCORD_STAKING_CHANNEL,
+            mode === 'production' ? config().production.DISCORD.Farming : config().staging.DISCORD,
             discordMsg
           )
         })

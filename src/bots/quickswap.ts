@@ -6,14 +6,9 @@ import * as telegram from '../output/telegram'
 import * as discord from '../output/discord'
 import {toDisplayNumber} from '../utils/formatValues'
 import {getArthToUSD} from '../utils/api'
+import { config } from '../utils/config';
 
-const DISCORD_STAKING_CHANNEL = nconf.get("BuySell_DiscordChannel") // for production
-// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
-
-// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
-const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
-
-const quickSwap = () => {
+const quickSwap = (mode: any) => {
 
   const web3Vyper = new Web3(nconf.get('MAINNET_MATIC1'));
   const vyperContract = new web3Vyper.eth.Contract(
@@ -122,11 +117,11 @@ ${dots}
       }
 
       telegram.sendMessage(
-        TELEGRAM_CHAT_ID,
+        mode === 'production' ? config().production.TELEGRAM_CHAT_ID : config().staging.TELEGRAM_CHAT_ID,
         telegramMsg
       )
       discord.sendMessage(
-        DISCORD_STAKING_CHANNEL,
+        mode === 'production' ? config().production.DISCORD.troveManage : config().staging.DISCORD,
         discordMsg
       )
     })

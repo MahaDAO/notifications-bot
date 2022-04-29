@@ -7,12 +7,7 @@ import { toDisplayNumber } from "../../utils/formatValues";
 import {getArthToUSD} from '../../utils/api'
 import * as telegram from "../../output/telegram";
 import * as discord from "../../output/discord";
-
-const DISCORD_STAKING_CHANNEL = nconf.get("BuySell_DiscordChannel")
-console.log('DISCORD_STAKING_CHANNEL', DISCORD_STAKING_CHANNEL)
-
-// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
-const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+import { config } from '../../utils/config';
 
 const telegramTemplate = (
   tokenSoldAmt: string,
@@ -66,7 +61,7 @@ ${dots}
 `;
 };
 
-const main = () => {
+const main = (mode: any) => {
   const web3 = new Web3(nconf.get("MAINNET_BSC"));
   const contract = new web3.eth.Contract(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -136,7 +131,7 @@ const main = () => {
       }
 
       telegram.sendMessage(
-        TELEGRAM_CHAT_ID,
+        mode === 'production' ? config().production.TELEGRAM_CHAT_ID : config().staging.TELEGRAM_CHAT_ID,
         telegramTemplate(
           tokenSoldAmt,
           tokenSold,
@@ -150,7 +145,7 @@ const main = () => {
       );
 
       discord.sendMessage(
-        DISCORD_STAKING_CHANNEL,
+        mode === 'production' ? config().production.DISCORD.curvePolygon : config().staging.DISCORD,
         discordTemplate(
           tokenSoldAmt,
           tokenSold,

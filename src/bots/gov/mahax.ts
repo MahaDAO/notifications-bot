@@ -6,14 +6,9 @@ import rp from 'request-promise'
 import votingEscrowAbi from '../../abi/VotingEscrow.json'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
+import { config } from '../../utils/config';
 
-const DISCORD_STAKING_CHANNEL = nconf.get("ArthLoan_DiscordChannel") // for production
-// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
-
-// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
-const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
-
-const mahaXBot = async () => {
+const mahaXBot = async (mode: any) => {
 
   // Polygon
   const web3 = new Web3(nconf.get('MAINNET_MATIC1'));
@@ -59,9 +54,7 @@ const mahaXBot = async () => {
           }
 
           msgTemplate = `
-🚀  Governance is in swing...
-
-*${event.returnValues.value / 10 ** 18} ($${
+🚀  *${event.returnValues.value / 10 ** 18} ($${
             (event.returnValues.value / 10 ** 18) * mahaToUsdPrice
           }) MAHA* has been locked till *${moment(
             event.returnValues.locktime * 1000
@@ -79,9 +72,7 @@ ${greenDots}
 `;
         } else if (event.returnValues.type == 3) {
           msgTemplate = `
-🚀  Governance is in swing...
-
-The locking period is extended till *${moment(
+🚀  The locking period is extended till *${moment(
             event.returnValues.locktime * 1000
           ).format("DD MMM YYYY")}* by [${
             event.returnValues.provider
@@ -104,9 +95,7 @@ The locking period is extended till *${moment(
           }
 
           msgTemplate = `
-🚀  Governance is in swing...
-
-*${event.returnValues.value / 10 ** 18} ($${
+🚀  *${event.returnValues.value / 10 ** 18} ($${
             (event.returnValues.value / 10 ** 18) * mahaToUsdPrice
           }) MAHA* has been withdrawn by [${
             event.returnValues.provider
@@ -121,11 +110,11 @@ The locking period is extended till *${moment(
         }
 
         telegram.sendMessage(
-          TELEGRAM_CHAT_ID,
+          mode === 'production' ? config().production.TELEGRAM_CHAT_ID : config().staging.TELEGRAM_CHAT_ID,
           msgTemplate
         )
         discord.sendMessage(
-          DISCORD_STAKING_CHANNEL,
+          mode === 'production' ? config().production.DISCORD.troveManage : config().staging.DISCORD,
           msgTemplate
         )
       }

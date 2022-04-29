@@ -6,12 +6,7 @@ import leverageAbi from '../../abi/ILeverageStrategy.json'
 import {msgToBeSent} from '../../utils/msgToBeSent'
 import * as telegram from '../../output/telegram'
 import * as discord from '../../output/discord'
-
-const DISCORD_STAKING_CHANNEL = nconf.get("Staking_DiscordChannel") // for production
-// const DISCORD_STAKING_CHANNEL = nconf.get("Test_DISCORD_CHANNEL_ID") // for staging
-
-// const TELEGRAM_CHAT_ID = nconf.get("TELEGRAM_CHAT_ID") // For production
-const TELEGRAM_CHAT_ID = nconf.get("Test_Tele_Chat_Id") // for staging
+import { config } from '../../utils/config';
 
 const leverageObj = [
   // {
@@ -35,7 +30,7 @@ const leverageObj = [
   },
 ];
 
-const leverage = async () => {
+const leverage = async (mode: any) => {
   leverageObj.map((lev) => {
     lev.contract.map((cont) => {
       new new Web3(lev.chainWss).eth.Contract(
@@ -68,11 +63,11 @@ const leverage = async () => {
           }
 
           telegram.sendMessage(
-            TELEGRAM_CHAT_ID,
+            mode === 'production' ? config().production.TELEGRAM_CHAT_ID : config().staging.TELEGRAM_CHAT_ID,
             telegramMsg
           )
           discord.sendMessage(
-            DISCORD_STAKING_CHANNEL,
+            mode === 'production' ? config().production.DISCORD.Stragies : config().staging.DISCORD,
             discordMsg
           )
         });
