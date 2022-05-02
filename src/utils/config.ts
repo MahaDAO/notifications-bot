@@ -9,7 +9,7 @@ export const config = () => {
         Farming: nconf.get("Staking_DiscordChannel"),
         Stragies: nconf.get("Staking_DiscordChannel"),
         troveManage: nconf.get("ArthLoan_DiscordChannel"),
-        mahax: nconf.get("ArthLoan_DiscordChannel"),
+        mahax: nconf.get("MahaxLocks_DiscordChannel"),
         quickswap: nconf.get("BuySell_DiscordChannel"),
         curvePolygon: nconf.get("BuySell_DiscordChannel")
       }

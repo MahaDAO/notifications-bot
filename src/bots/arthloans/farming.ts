@@ -2,6 +2,8 @@ import nconf from "nconf";
 import Web3 from 'web3'
 
 import farmingAbi from "../../abi/BasicStaking.json";
+import DotDotStaking from '../../abi/DotDotStaking.json'
+import EllipsisStaking from '../../abi/EllipsisStaking.json'
 import {msgToBeSent} from '../../utils/msgToBeSent'
 import {config} from '../../utils/config'
 import * as telegram from '../../output/telegram'
@@ -43,12 +45,12 @@ const basicStaking = [
   {
     contrat: [
       {
-        lpTokenName: "ARTH.usd+3eps",
-        lpTokenAdrs: '0x6398c73761a802a7db8f6418ef0a299301bc1fb0',
-      },
-      {
         lpTokenName: "ARTH/BUSD LP",
         lpTokenAdrs: '0xe8b16cab47505708a093085926560a3eb32584b8',
+      },
+      {
+        lpTokenName: "ARTH/MAHA Ape LP",
+        lpTokenAdrs: "0x1599a0A579aD3Fc86DBe6953dfEc04eb365dd8e6"
       },
       {
         lpTokenName: "ARTH/MAHA LP",
@@ -59,29 +61,55 @@ const basicStaking = [
         lpTokenAdrs: "0x41efe9ad56d328449439c330b327ca496c3e38bb"
       },
       {
-        lpTokenName: "ARTH/MAHA Ape LP",
-        lpTokenAdrs: "0x1599a0A579aD3Fc86DBe6953dfEc04eb365dd8e6"
+        lpTokenName: "ARTH.usd+val3EPS-Dot",
+        lpTokenAdrs: "0x8189f0afdbf8fe6a9e13c69ba35528ac6abeb1af", // abi is different - DotDotStaking
+        lpAbi: DotDotStaking,
+      },
+      {
+        lpTokenName: "ARTH.usd+3eps",
+        lpTokenAdrs: '0x6398C73761a802a7Db8f6418Ef0a299301bC1Fb0', // abi is different - EllipsisStaking
+        lpAbi: EllipsisStaking
+      },
+      {
+        lpTokenName: 'ARTH.usd+3epx',
+        lpTokenAdrs: '0x5b74c99aa2356b4eaa7b85dc486843edff8dfdbe', // abi is different - EllipsisStaking
+        lpAbi: EllipsisStaking
       },
     ],
     chainWss: nconf.get('MAINNET_BSC1'),
     chainName: "BSC Mainnet",
   },
-
 ];
 
 const farming = async (mode: any) => {
 
   console.log('config', config)
 
+  let abi:any
+
   basicStaking.map((farm) => {
     const web3 = new Web3(farm.chainWss)
 
     farm.contrat.map((cont) => {
+      if(cont.lpTokenName == 'ARTH.usd+3epx' || cont.lpTokenName ==  "ARTH.usd+3eps")
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        abi = EllipsisStaking
+      else if(cont.lpTokenName ==  "ARTH.usd+val3EPS-Dot")
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        abi = DotDotStaking
+      else
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        abi = farmingAbi
+
+
       const contract = new web3.eth.Contract(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-         farmingAbi,
-         cont.lpTokenAdrs
+        abi,
+        cont.lpTokenAdrs
       )
 
       let lastCheck = Date.now()
@@ -103,7 +131,7 @@ const farming = async (mode: any) => {
           let telegramMsg = "";
           let discordMsg = "";
 
-          if (data.event == "Staked") {
+          if (data.event == "Staked" || data.event == 'Deposit') {
             telegramMsg = await msgToBeSent(
               data,
               farm.chainName,
@@ -116,7 +144,7 @@ const farming = async (mode: any) => {
             );
           }
 
-          if (data.event == "Withdrawn") {
+          if (data.event == "Withdrawn" || data.event == 'Withdraw') {
             telegramMsg = await msgToBeSent(
               data,
               farm.chainName,
@@ -129,7 +157,7 @@ const farming = async (mode: any) => {
             );
           }
 
-          if (data.event == "RewardPaid") {
+          if (data.event == "RewardPaid" || data.event == 'ClaimedReward' || data.event == 'Claimed') {
             telegramMsg = await msgToBeSent(
               data,
               farm.chainName,

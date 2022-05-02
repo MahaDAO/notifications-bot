@@ -14,7 +14,7 @@ const allCollateralPrices:any = await getCollateralPrices()
   let apr = "";
   let msg = "";
   let poolLPVal = 1;
-  let swapName;
+  let swapName = '';
   // let mahaToken = ''
   const tvlApr = await tvlAprFn();
   const lpPoolValObj = await poolTokenVal();
@@ -22,27 +22,30 @@ const allCollateralPrices:any = await getCollateralPrices()
   if (chain == "Polygon Mainnet") {
     chainLink = "https://polygonscan.com";
     // mahaToken = "0xedd6ca8a4202d4a36611e2fff109648c4863ae19";
-    swapName = "QuickSwap";
 
     if (poolName == "ARTH.usd+3pool"){
       poolLPVal = lpPoolValObj.arthUsdc3Polygon
       tvl = tvlApr.polygon.tvl.arthu3pool.toLocaleString()
       apr = tvlApr.polygon.apr.arthu3pool
+      swapName = "Polygon.Curve"
     }
     if (poolName === "ARTH/USDC LP"){
       poolLPVal = lpPoolValObj.arthUsdcPolygon
       tvl = tvlApr.polygon.tvl.arthUsdc.toLocaleString()
       apr = ''
+      swapName = "QuickSwap";
     }
     if (poolName === "ARTH/MAHA LP"){
       poolLPVal = lpPoolValObj.arthMahaPolygon
       tvl = tvlApr.polygon.tvl.arthMaha.toLocaleString()
       apr = tvlApr.polygon.apr.arthMaha
+      swapName = "QuickSwap";
     }
     if(poolName === "WETH"){
       poolLPVal = allCollateralPrices.WETH.toLocaleString()
       tvl = ''
       apr = ''
+
     }
     if(poolName === "DAI"){
       poolLPVal = allCollateralPrices.DAI.toLocaleString()
@@ -65,32 +68,37 @@ const allCollateralPrices:any = await getCollateralPrices()
     chainLink = "https://bscscan.com";
     // mahaToken = "0xCE86F7fcD3B40791F63B86C3ea3B8B355Ce2685b";
     apr = tvlApr.bsc.apr;
-    swapName = "PanCakeSwap";
 
     if (poolName == "ARTH.usd+3eps"){
       poolLPVal = lpPoolValObj.arthUsdc3Bsc
       tvl = ''
       apr = tvlApr.bsc.apr['arthu3eps-v2']
+      swapName = "Ellipsis.Finance"
     }
     if (poolName === "ARTH/BUSD LP"){
       poolLPVal = lpPoolValObj.arthBusdBsc
       tvl = tvlApr.bsc.tvl.arthBusd.toLocaleString()
       apr = ''
+      swapName = "Pancakeswap"
     }
     if (poolName === "ARTH/MAHA LP"){
       poolLPVal = lpPoolValObj.arthMahaBsc
       tvl = tvlApr.bsc.tvl.arthMaha.toLocaleString()
       apr = ''
+      swapName = "Pancakeswap"
     }
     if (poolName === "ARTH.usd+val3eps"){
       poolLPVal = 1
       tvl = tvlApr.bsc.tvl["arthu3valeps-v2"].toLocaleString()
       apr = tvlApr.bsc.apr["arthu3valeps-v2"]
+      swapName = "Ellipsis.Finance"
+
     }
     if (poolName === "ARTH/MAHA Ape LP"){
       poolLPVal = 1
       tvl = tvlApr.bsc.tvl.arthMahaApe.toLocaleString()
       apr = tvlApr.bsc.apr.arthMahaApe
+      swapName = "Apeswap.Finance"
     }
     if (poolName === "MAHA"){
       poolLPVal = allCollateralPrices.MAHA.toLocaleString()
@@ -125,11 +133,13 @@ const allCollateralPrices:any = await getCollateralPrices()
       poolLPVal = 1
       tvl = ''
       apr = ''
+      swapName = ""
     }
     if(poolName === "FRAX/ARTH.usd Curve"){
       poolLPVal = 1
       tvl = ''
       apr = ''
+      swapName = ""
     }
     if(poolName === 'WETH'){
       poolLPVal = allCollateralPrices.WETH.toLocaleString()
@@ -208,31 +218,30 @@ const allCollateralPrices:any = await getCollateralPrices()
   }
 
   // Farming
-  if (data.event == "Staked") {
+  if (data.event == "Staked" || data.event == 'Deposit') {
     if (poolName === "ARTH/USDC LP")
-    eventVal = format.toDisplayNumber(data.returnValues.amount * 1000000);
+      eventVal = format.toDisplayNumber(data.returnValues.amount * 1000000);
     else eventVal = format.toDisplayNumber(data.returnValues.amount);
     msg = `*${eventVal} ${poolName} ($${Numeral(parseFloat(eventVal) * poolLPVal).format(
       "0.000"
     )})* tokens has been staked on **${swapName} ${poolName} Staking Program** by [${eventUser}](${url})`;
     noOfTotalDots = Math.ceil((parseFloat(eventVal) * poolLPVal) / 100);
   }
-  if (data.event === "Withdrawn") {
+  if (data.event === "Withdrawn"  || data.event == 'Withdraw') {
     if (poolName === "ARTH/USDC LP")
-    eventVal = format.toDisplayNumber(data.returnValues.amount * 1000000);
+      eventVal = format.toDisplayNumber(data.returnValues.amount * 1000000);
     else eventVal = format.toDisplayNumber(data.returnValues.amount);
     msg = `*${eventVal} ${poolName} ($${Numeral(parseFloat(eventVal) * poolLPVal).format(
       "0.000"
     )})* tokens has been withdrawn from **${swapName} ${poolName} Staking Program** by [${eventUser}](${url})`;
     noOfTotalDots = Math.ceil((parseFloat(eventVal) * poolLPVal) / 100);
   }
-  if (data.event == "RewardPaid") {
+  if (data.event == "RewardPaid" || data.event == 'ClaimedReward' || data.event == 'Claimed') {
     eventVal = format.toDisplayNumber(data.returnValues.reward);
     console.log("RewardPaid", eventVal, data.returnValues.reward);
     msg = `*${eventVal} MAHA* tokens has been claimed as reward from **${swapName} ${poolName} Staking Program** by [${eventUser}](${url})`;
     noOfTotalDots = Math.ceil((parseFloat(eventVal) * poolLPVal) / 100);
   }
-
 
   // Leverage
   if (data.event == "PositionOpened") {

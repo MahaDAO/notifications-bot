@@ -51,15 +51,11 @@ const quickSwap = (mode: any) => {
         } else if (data.returnValues.sold_id == "2") {
           tokenSold = "USDC";
           tokenSoldAmt = ethers.utils.formatUnits(
-            data.returnValues.tokens_sold,
-            6
-          );
+            data.returnValues.tokens_sold,6);
         } else {
           tokenSold = "USDT";
           tokenSoldAmt = ethers.utils.formatUnits(
-            data.returnValues.tokens_sold,
-            6
-          );
+            data.returnValues.tokens_sold,6);
         }
 
         if (data.returnValues.bought_id == "0") {
@@ -82,15 +78,11 @@ const quickSwap = (mode: any) => {
         } else if (data.returnValues.bought_id == "2") {
           tokenBought = "USDC";
           tokenBoughtAmt = ethers.utils.formatUnits(
-            data.returnValues.tokens_bought,
-            6
-          );
+            data.returnValues.tokens_bought, 6);
         } else {
           tokenBought = "USDT";
           tokenBoughtAmt = ethers.utils.formatUnits(
-            data.returnValues.tokens_bought,
-            6
-          );
+            data.returnValues.tokens_bought,6);
         }
 
         telegramMsg = `🚀  *${tokenSoldAmt} ${tokenSold}* has been sold for *${tokenBoughtAmt} ${tokenBought}* by [${
