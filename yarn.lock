@@ -832,10 +832,10 @@
     "@types/node" "*"
     form-data "^3.0.0"
 
-"@types/node-telegram-bot-api@^0.56.2":
-  version "0.56.2"
-  resolved "https://registry.yarnpkg.com/@types/node-telegram-bot-api/-/node-telegram-bot-api-0.56.2.tgz#3eb2fea93e7884b0fb9f14c626cabb593e20fe1e"
-  integrity sha512-LWM7/+/4Jtoxwq2kvCW9TlWzxcc//6kA1VHhG42E73UEzXG30y0UuSH2uh4RiFi4Ekig7mhl4oP8uvcBOdlaVQ==
+"@types/node-telegram-bot-api@^0.57.0":
+  version "0.57.0"
+  resolved "https://registry.yarnpkg.com/@types/node-telegram-bot-api/-/node-telegram-bot-api-0.57.0.tgz#ded3147d6da6377a0726463672038aa3f0fe605e"
+  integrity sha512-yP3ufGaauhj1K0CzgPVyK8HXx235ML+M9Q//sVSa0TqQwt24enhIQxoqFlxE+WusPWyrVmxm8+HYG3ljAMDHyA==
   dependencies:
     "@types/node" "*"
     "@types/request" "*"
