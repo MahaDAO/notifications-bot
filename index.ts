@@ -1,5 +1,5 @@
 import nconf from "nconf";
-// import Web3 from 'web3'
+
 nconf.argv()
    .env()
    .file({ file: './config.json' });
@@ -27,3 +27,8 @@ quickswap(mode) // 1 instance // polygon.curve 3pool, buy-sell on same site
 // curvePolygon(mode) // 1 instance // trade
 
 troveManager(mode) // 8 instances // For Redeem and Liquidate
+
+
+// setInterval(() => {
+//   twitterMetions(mode)
+// }, 2000)

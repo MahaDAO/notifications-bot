@@ -11,7 +11,8 @@ export const config = () => {
         troveManage: nconf.get("ArthLoan_DiscordChannel"),
         mahax: nconf.get("MahaxLocks_DiscordChannel"),
         quickswap: nconf.get("BuySell_DiscordChannel"),
-        curvePolygon: nconf.get("BuySell_DiscordChannel")
+        curvePolygon: nconf.get("BuySell_DiscordChannel"),
+        twitterMention: nconf.get("TwitterMention_Discord")
       }
     },
     staging: {

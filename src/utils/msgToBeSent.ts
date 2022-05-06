@@ -100,6 +100,18 @@ const allCollateralPrices:any = await getCollateralPrices()
       apr = tvlApr.bsc.apr.arthMahaApe
       swapName = "Apeswap.Finance"
     }
+    if(poolName === 'ARTH.usd+3epx'){
+      poolLPVal = 1
+      tvl = tvlApr.bsc.apr['arthu3epx'].toLocaleString()
+      apr = ''
+      swapName = "Ellipsis.Finance"
+    }
+    if(poolName === 'ARTH.usd+val3EPS-Dot'){
+      poolLPVal = 1
+      tvl = tvlApr.bsc.apr['arthu3valdoteps'].toLocaleString()
+      apr = ''
+      swapName = "Ellipsis.Finance"
+    }
     if (poolName === "MAHA"){
       poolLPVal = allCollateralPrices.MAHA.toLocaleString()
       tvl = ''
@@ -231,13 +243,14 @@ const allCollateralPrices:any = await getCollateralPrices()
     if (poolName === "ARTH/USDC LP")
       eventVal = format.toDisplayNumber(data.returnValues.amount * 1000000);
     else eventVal = format.toDisplayNumber(data.returnValues.amount);
+    console.log('eventVal', eventVal)
     msg = `*${eventVal} ${poolName} ($${Numeral(parseFloat(eventVal) * poolLPVal).format(
       "0.000"
     )})* tokens has been withdrawn from **${swapName} ${poolName} Staking Program** by [${eventUser}](${url})`;
     noOfTotalDots = Math.ceil((parseFloat(eventVal) * poolLPVal) / 100);
   }
   if (data.event == "RewardPaid" || data.event == 'ClaimedReward' || data.event == 'Claimed') {
-    eventVal = format.toDisplayNumber(data.returnValues.reward);
+    eventVal = format.toDisplayNumber(data.returnValues.reward) || format.toDisplayNumber(data.returnValues.amount);
     console.log("RewardPaid", eventVal, data.returnValues.reward);
     msg = `*${eventVal} MAHA* tokens has been claimed as reward from **${swapName} ${poolName} Staking Program** by [${eventUser}](${url})`;
     noOfTotalDots = Math.ceil((parseFloat(eventVal) * poolLPVal) / 100);
@@ -258,7 +271,7 @@ const allCollateralPrices:any = await getCollateralPrices()
   let dots = "";
   for (let i = 0; i < noOfTotalDots; i++) {
     if (data.event == "TroveLiquidated" || data.event == "Redemption" ||
-      data.returnValues.operation == "0" || data.event == "Staked" ||
+      data.returnValues.operation == "0" || data.event == "Staked" || data.event == 'Deposit' ||
       data.event == "RewardPaid" || data.event == "PositionOpened")
       dots = "🟢 " + dots;
     else if (data.event === "Withdrawn" || data.event == "PositionClosed") dots = "🔴 " + dots;

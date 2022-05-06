@@ -4,6 +4,7 @@ import Web3 from 'web3'
 import farmingAbi from "../../abi/BasicStaking.json";
 import DotDotStaking from '../../abi/DotDotStaking.json'
 import EllipsisStaking from '../../abi/EllipsisStaking.json'
+import Arthu3eps from '../../abi/Arthu3eps.json'
 import {msgToBeSent} from '../../utils/msgToBeSent'
 import {config} from '../../utils/config'
 import * as telegram from '../../output/telegram'
@@ -60,21 +61,18 @@ const basicStaking = [
         lpTokenName: "ARTH.usd+val3eps",
         lpTokenAdrs: "0x41efe9ad56d328449439c330b327ca496c3e38bb"
       },
-      {
-        lpTokenName: "ARTH.usd+val3EPS-Dot",
-        lpTokenAdrs: "0x8189f0afdbf8fe6a9e13c69ba35528ac6abeb1af", // abi is different - DotDotStaking
-        lpAbi: DotDotStaking,
-      },
+      // {
+      //   lpTokenName: "ARTH.usd+val3EPS-Dot",
+      //   lpTokenAdrs: "0x8189f0afdbf8fe6a9e13c69ba35528ac6abeb1af", // abi is different - DotDotStaking
+      // },
       {
         lpTokenName: "ARTH.usd+3eps",
         lpTokenAdrs: '0x6398C73761a802a7Db8f6418Ef0a299301bC1Fb0', // abi is different - EllipsisStaking
-        lpAbi: EllipsisStaking
       },
-      {
-        lpTokenName: 'ARTH.usd+3epx',
-        lpTokenAdrs: '0x5b74c99aa2356b4eaa7b85dc486843edff8dfdbe', // abi is different - EllipsisStaking
-        lpAbi: EllipsisStaking
-      },
+      // {
+      //   lpTokenName: 'ARTH.usd+3epx',
+      //   lpTokenAdrs: '0x5b74c99aa2356b4eaa7b85dc486843edff8dfdbe', // abi is different - EllipsisStaking
+      // },
     ],
     chainWss: nconf.get('MAINNET_BSC1'),
     chainName: "BSC Mainnet",
@@ -91,10 +89,14 @@ const farming = async (mode: any) => {
     const web3 = new Web3(farm.chainWss)
 
     farm.contrat.map((cont) => {
-      if(cont.lpTokenName == 'ARTH.usd+3epx' || cont.lpTokenName ==  "ARTH.usd+3eps")
+      if(cont.lpTokenName == 'ARTH.usd+3epx')
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         abi = EllipsisStaking
+      else if(cont.lpTokenName ==  "ARTH.usd+3eps")
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        abi = Arthu3eps
       else if(cont.lpTokenName ==  "ARTH.usd+val3EPS-Dot")
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
