@@ -13,8 +13,8 @@ import troveManager from './src/bots/arthloans/troveManage'
 
 // At a time 13 connections can be open
 
-// const mode = 'production'
-const mode = 'staging'
+const mode = 'production'
+// const mode = 'staging'
 
 borrowingOperations(mode) // 11 instances // opne, close, modify the loan
 strategies(mode) // 2 instances //open and close positions
