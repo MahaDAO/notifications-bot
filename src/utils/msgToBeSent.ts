@@ -73,7 +73,7 @@ const allCollateralPrices:any = await getCollateralPrices()
       poolLPVal = lpPoolValObj.arthUsdc3Bsc
       tvl = ''
       apr = tvlApr.bsc.apr['arthu3eps-v2']
-      swapName = "Ellipsis.Finance"
+      swapName = "Ellipsis"
     }
     if (poolName === "ARTH/BUSD LP"){
       poolLPVal = lpPoolValObj.arthBusdBsc
@@ -91,26 +91,26 @@ const allCollateralPrices:any = await getCollateralPrices()
       poolLPVal = 1
       tvl = tvlApr.bsc.tvl["arthu3valeps-v2"].toLocaleString()
       apr = tvlApr.bsc.apr["arthu3valeps-v2"]
-      swapName = "Ellipsis.Finance"
+      swapName = "Ellipsis"
 
     }
     if (poolName === "ARTH/MAHA Ape LP"){
       poolLPVal = 1
       tvl = tvlApr.bsc.tvl.arthMahaApe.toLocaleString()
       apr = tvlApr.bsc.apr.arthMahaApe
-      swapName = "Apeswap.Finance"
+      swapName = "Apeswap"
     }
     if(poolName === 'ARTH.usd+3epx'){
       poolLPVal = 1
       tvl = tvlApr.bsc.apr['arthu3epx'].toLocaleString()
       apr = ''
-      swapName = "Ellipsis.Finance"
+      swapName = "Ellipsis"
     }
     if(poolName === 'ARTH.usd+val3EPS-Dot'){
       poolLPVal = 1
       tvl = tvlApr.bsc.apr['arthu3valdoteps'].toLocaleString()
       apr = ''
-      swapName = "Ellipsis.Finance"
+      swapName = "Ellipsis"
     }
     if (poolName === "MAHA"){
       poolLPVal = allCollateralPrices.MAHA.toLocaleString()
@@ -270,11 +270,10 @@ const allCollateralPrices:any = await getCollateralPrices()
 
   let dots = "";
   for (let i = 0; i < noOfTotalDots; i++) {
-    if (data.event == "TroveLiquidated" || data.event == "Redemption" ||
-      data.returnValues.operation == "0" || data.event == "Staked" || data.event == 'Deposit' ||
+    if (data.event == "Redemption" || data.returnValues.operation == "0" || data.event == "Staked" || data.event == 'Deposit' ||
       data.event == "RewardPaid" || data.event == "PositionOpened")
       dots = "🟢 " + dots;
-    else if (data.event === "Withdrawn" || data.event == "PositionClosed") dots = "🔴 " + dots;
+    else if (data.event === "Withdrawn" || data.event == "PositionClosed" || data.event == "TroveLiquidated") dots = "🔴 " + dots;
     else dots = "" + dots;
   }
 

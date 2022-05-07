@@ -114,7 +114,7 @@ ${greenDots}
           msgTemplate
         )
         discord.sendMessage(
-          mode === 'production' ? config().production.DISCORD.troveManage : config().staging.DISCORD,
+          mode === 'production' ? config().production.DISCORD.mahax : config().staging.DISCORD,
           msgTemplate
         )
       }
