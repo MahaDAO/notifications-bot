@@ -1,10 +1,11 @@
 import Numeral = require("numeral");
+import moment from 'moment'
 import {getCollateralPrices} from './getCollateralPrices'
 
 import {getMahaPrice, getArthToUSD, tvlAprFn, poolTokenVal} from "./api";
 import format = require("./formatValues");
 
-export const msgToBeSent = async(data: any, chain: string, poolName: string) => {
+export const msgToBeSent = async(data: any, chain?: string, poolName?: string) => {
 const allCollateralPrices:any = await getCollateralPrices()
 
   console.log('allCollateralPrices', allCollateralPrices)
@@ -19,10 +20,13 @@ const allCollateralPrices:any = await getCollateralPrices()
   const tvlApr = await tvlAprFn();
   const lpPoolValObj = await poolTokenVal();
 
+  console.log('lpPoolValObj', lpPoolValObj)
+  console.log('chain', chain)
+
   if (chain == "Polygon Mainnet") {
     chainLink = "https://polygonscan.com";
     // mahaToken = "0xedd6ca8a4202d4a36611e2fff109648c4863ae19";
-
+    console.log('If Polygon Mainnet')
     if (poolName == "ARTH.usd+3pool"){
       poolLPVal = lpPoolValObj.arthUsdc3Polygon
       tvl = tvlApr.polygon.tvl.arthu3pool.toLocaleString()
@@ -164,10 +168,16 @@ const allCollateralPrices:any = await getCollateralPrices()
       apr = ''
     }
   }
+  if(chain == 'Fantom Mainnet'){
+    chainLink = "https://ftmscan.com"
+    poolLPVal = 1
+    tvl = ''
+    apr = ''
+  }
 
   let eventVal = '';
-  const eventUser = data.returnValues.user;
-  const url = `${chainLink}/address/${eventUser}`;
+  let eventUser = data.returnValues.user;
+  let url = `${chainLink}/address/${eventUser}`;
   let noOfTotalDots = 0
   let poolValues = ''
 
@@ -230,7 +240,8 @@ const allCollateralPrices:any = await getCollateralPrices()
   }
 
   // Farming
-  if (data.event == "Staked" || data.event == 'Deposit') {
+  if ((data.event == "Staked" || data.event == 'Deposit') && chain != 'Fantom Mainnet') {
+
     if (poolName === "ARTH/USDC LP")
       eventVal = format.toDisplayNumber(data.returnValues.amount * 1000000);
     else eventVal = format.toDisplayNumber(data.returnValues.amount);
@@ -268,6 +279,31 @@ const allCollateralPrices:any = await getCollateralPrices()
     msg = `A position has been closed by [${data.returnValues.who}](${url})`;
   }
 
+  // FantomNotify
+  if(data.event == "Deposit" && chain == 'Fantom Mainnet'){
+    eventUser = data.returnValues.provider
+    eventVal = format.toDisplayNumber(data.returnValues.value)
+    url = `${chainLink}/address/${eventUser}`
+    noOfTotalDots = Math.ceil(Number(eventVal) / 100)
+    if(data.returnValues.deposit_type == '1')
+      msg = `*${eventVal} FTM* tokens has been locked by [${eventUser}](${url})`
+    else if(data.returnValues.deposit_type == '2')
+      msg = `*${eventVal}* more *FTM* tokens has been locked by [${eventUser}](${url})`
+    else if(data.returnValues.deposit_type == '3')
+      msg = `The locking period of FTM token is extended till *${moment(
+        data.returnValues.locktime * 1000
+      ).format("DD MMM YYYY")}* by [${eventUser}](${url})`
+    else
+      msg = 'Another Fantom event'
+  }
+
+  if(data.event == "Voted" && chain == 'Fantom Mainnet'){
+    msg = `FTM token *${data.returnValues.tokenId}* has been voted for *${format.toDisplayNumber(data.returnValues.weight)}%*`
+  }
+  // if(data.event == "ClaimRewards" && chain == 'Fantom Mainnet'){
+  //   msg = `${data.returnValues.amount}`
+  // }
+
   let dots = "";
   for (let i = 0; i < noOfTotalDots; i++) {
     if (data.event == "Redemption" || data.returnValues.operation == "0" || data.event == "Staked" || data.event == 'Deposit' ||
@@ -283,9 +319,9 @@ const allCollateralPrices:any = await getCollateralPrices()
 ${dots.length === 0 ?
   '' :
 `${dots}
-`}${poolValues === '' ? '' : `
+`}${poolValues &&`
 ${poolValues}
-`}${tvl === '' ? '' : `
+`}${tvl && `
 TVL in this pool: *$`+ tvl + `*`}${ apr === '' ? '' : `
 New APR: *` + Numeral(apr).format("0.000") +`%*`}
 

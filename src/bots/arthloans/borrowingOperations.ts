@@ -86,7 +86,8 @@ const borrowingOperations = (mode: string) => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         borrowerOperationsAbi, adrs.collAdrs).events.allEvents()
-        .on('connected', (nr:any) => console.log(`connected borrow ${borrowContract.chainName} ${adrs.collName}`))
+        .on('connected', () => console.log(`connected borrow ${borrowContract.chainName} ${adrs.collName}`))
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .on('data', async(event:any) => {
 
           console.log('borrowContract', event)
