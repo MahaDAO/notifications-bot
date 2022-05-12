@@ -41,19 +41,20 @@ export const twitterMetions = (mode: any) => {
 
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    stream.on('tweet', (tweet: any) => {
-
-    if(!whiteListedUsers.includes(tweet.user.id_str)) return
-    if(!tweet.text.includes(trackWords[0])) return
-    if(!tweet.text.includes(trackWords[1])) return
-    console.log('discord_channel', discord_channel)
     console.log('tweet', tweet)
-    msgTemplate = `${tweet.text}`
+    if(whiteListedUsers.includes(tweet.user.id_str) &&
+      (trackWords.some(word => tweet.text.includes(word)))) {
+        console.log('discord_channel', discord_channel)
+        msgTemplate = `${tweet.text}`
 
-    discord.sendMessage(
-    mode === 'production' ? config().production.DISCORD.twitterMention : config().staging.DISCORD,
-    msgTemplate,
-    tweet.user
-    )
+        discord.sendMessage(
+          mode === 'production' ? config().production.DISCORD.twitterMention : config().staging.DISCORD,
+          msgTemplate,
+          tweet.user)
+      }
+    else{
+      console.log('not includes hence do not send')
+    }
    })
 
 }
