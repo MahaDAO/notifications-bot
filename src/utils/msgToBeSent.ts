@@ -5,7 +5,7 @@ import {getCollateralPrices} from './getCollateralPrices'
 import {getMahaPrice, getArthToUSD, tvlAprFn, poolTokenVal} from "./api";
 import format = require("./formatValues");
 
-export const msgToBeSent = async(data: any, chain?: string, poolName?: string) => {
+export const msgToBeSent = async(data: any, chain?: string, poolName?: string, eventFrom?: string) => {
 const allCollateralPrices:any = await getCollateralPrices()
 
   console.log('allCollateralPrices', allCollateralPrices)
@@ -287,14 +287,13 @@ const allCollateralPrices:any = await getCollateralPrices()
     noOfTotalDots = Math.ceil(Number(eventVal) / 100)
     if(data.returnValues.deposit_type == '1')
       msg = `*${eventVal} FTM* tokens has been locked by [${eventUser}](${url})`
-    else if(data.returnValues.deposit_type == '2')
+    if(data.returnValues.deposit_type == '2')
       msg = `*${eventVal}* more *FTM* tokens has been locked by [${eventUser}](${url})`
-    else if(data.returnValues.deposit_type == '3')
+    if(data.returnValues.deposit_type == '3')
       msg = `The locking period of FTM token is extended till *${moment(
         data.returnValues.locktime * 1000
       ).format("DD MMM YYYY")}* by [${eventUser}](${url})`
-    else
-      msg = 'Another Fantom event'
+
   }
 
   if(data.event == "Voted" && chain == 'Fantom Mainnet'){
@@ -303,6 +302,18 @@ const allCollateralPrices:any = await getCollateralPrices()
   // if(data.event == "ClaimRewards" && chain == 'Fantom Mainnet'){
   //   msg = `${data.returnValues.amount}`
   // }
+
+  // MahaXNFT
+  if(data.event == "Deposit" && eventFrom == 'mahaxnft'){
+    if(data.returnValues.deposit_type == '1')
+      msg = `*${eventVal} FTM* tokens has been locked by [${eventUser}](${url})`
+    if(data.returnValues.deposit_type == '2')
+      msg = `*${eventVal}* more *FTM* tokens has been locked by [${eventUser}](${url})`
+    if(data.returnValues.deposit_type == '3')
+      msg = `The locking period of FTM token is extended till *${moment(
+        data.returnValues.locktime * 1000).format("DD MMM YYYY")}* by [${eventUser}](${url})`
+
+  }
 
   let dots = "";
   for (let i = 0; i < noOfTotalDots; i++) {

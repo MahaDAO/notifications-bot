@@ -34,16 +34,22 @@ export const twitterMetions = (mode: any) => {
 
    const stream = T.stream('statuses/filter', {
      follow: whiteListedUsers,
-     track: trackWords
-   })
+     track: trackWords,
+
+    })
 
    const discord_channel = config().staging.DISCORD
 
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    stream.on('tweet', (tweet: any) => {
-    console.log('tweet', tweet)
     if(whiteListedUsers.includes(tweet.user.id_str) &&
-      (trackWords.some(word => tweet.text.includes(word)))) {
+      (trackWords.some(word => tweet.text.includes(word))) &&
+        !tweet.retweeted && !tweet.retweeted_status && !tweet.in_reply_to_status_id &&
+        !tweet.in_reply_to_status_id_str && !tweet.in_reply_to_user_id &&
+        !tweet.in_reply_to_user_id_str && !tweet.in_reply_to_screen_name
+        ) {
+        console.log('tweet', tweet)
+
         console.log('discord_channel', discord_channel)
         msgTemplate = `${tweet.text}`
 
