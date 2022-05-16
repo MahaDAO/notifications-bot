@@ -1,5 +1,5 @@
 import nconf from "nconf";
-import { Client, Intents, MessageEmbed, TextChannel } from "discord.js";
+import { Client, Intents, MessageEmbed, TextChannel} from "discord.js";
 
 export const client = new Client({
   intents: [
@@ -42,19 +42,24 @@ client.login(DISCORD_TOKEN); //login bot using token
 export const sendMessage = (channelName: any, messageMarkdown: string, user?: any) => {
   const channel = client.channels.cache.get(channelName);
 
-
   let discordMsgEmbed: any
   if(user){
     console.log('if user')
     // client.user?.setUsername(user.screen_name)
     // client.user?.setAvatar(user.profile_image_url)
     discordMsgEmbed = new MessageEmbed()
-    .setColor("#F07D55")
-    .setDescription(messageMarkdown)
-    .setAuthor({
-      name: user.name,
-      iconURL: user.profile_image_url
-    })
+      .setColor("#F07D55")
+      .setDescription(messageMarkdown)
+      .setAuthor({
+        name: user ? user.name : '',
+        iconURL: user ? user.profile_image_url : ''
+      })
+      .setFooter({
+        text: user ?'Twitter' : '',
+        iconURL: user ?  'https://i.imgur.com/7WCdDFw.png' : ''
+      })
+      .setTimestamp()
+
   }
   else{
     client.user?.setUsername('Maha')

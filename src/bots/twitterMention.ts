@@ -29,7 +29,8 @@ export const twitterMetions = (mode: any) => {
 
    const trackWords = [
     '$MAHA',
-    '@TheMahaDAO'
+    '@TheMahaDAO',
+    '$ARTH'
    ]
 
    const stream = T.stream('statuses/filter', {
