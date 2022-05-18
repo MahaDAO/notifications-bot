@@ -12,6 +12,7 @@ nconf.argv()
 // import troveManager from './src/bots/arthloans/troveManage'
 import { twitterMetions } from './src/bots/twitterMention';
 // import fantomNotify from './src/bots/fantomNotify';
+// import mahaxNFT from './src/bots/gov/mahaxNFT'
 
 // At a time 13 connections can be open
 
@@ -30,5 +31,6 @@ const mode = 'production'
 
 // troveManager(mode) // 8 instances // For Redeem and Liquidate
 twitterMetions(mode)
+// mahaxNFT(mode)
 // fantomNotify(mode)
 

@@ -175,6 +175,7 @@ const allCollateralPrices:any = await getCollateralPrices()
     apr = ''
   }
 
+
   let eventVal = '';
   let eventUser = data.returnValues.user;
   let url = `${chainLink}/address/${eventUser}`;
@@ -240,7 +241,7 @@ const allCollateralPrices:any = await getCollateralPrices()
   }
 
   // Farming
-  if ((data.event == "Staked" || data.event == 'Deposit') && chain != 'Fantom Mainnet') {
+  if ((data.event == "Staked" || data.event == 'Deposit') && chain != 'Fantom Mainnet' && eventFrom == 'farming') {
 
     if (poolName === "ARTH/USDC LP")
       eventVal = format.toDisplayNumber(data.returnValues.amount * 1000000);
@@ -305,12 +306,20 @@ const allCollateralPrices:any = await getCollateralPrices()
 
   // MahaXNFT
   if(data.event == "Deposit" && eventFrom == 'mahaxnft'){
-    if(data.returnValues.deposit_type == '1')
-      msg = `*${eventVal} FTM* tokens has been locked by [${eventUser}](${url})`
-    if(data.returnValues.deposit_type == '2')
-      msg = `*${eventVal}* more *FTM* tokens has been locked by [${eventUser}](${url})`
+    eventUser = data.returnValues.provider
+    eventVal = format.toDisplayNumber(data.returnValues.value)
+    url = `https://mumbai.polygonscan.com/address/${eventUser}`
+    chainLink = 'https://mumbai.polygonscan.com'
+    if(data.returnValues.deposit_type == '1'){
+      noOfTotalDots = Math.ceil(Number(eventVal) / 100)
+      msg = `*${eventVal}* MAHA tokens has been locked for NFT by [${eventUser}](${url})`
+    }
+    if(data.returnValues.deposit_type == '2'){
+      noOfTotalDots = Math.ceil(Number(eventVal) / 100)
+      msg = `*${eventVal}* more *MAHA* tokens has been locked for NFT by [${eventUser}](${url})`
+    }
     if(data.returnValues.deposit_type == '3')
-      msg = `The locking period of FTM token is extended till *${moment(
+      msg = `The locking period of MAHA token is extended for NFT till *${moment(
         data.returnValues.locktime * 1000).format("DD MMM YYYY")}* by [${eventUser}](${url})`
 
   }

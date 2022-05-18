@@ -1,31 +1,14 @@
-import Twit from 'twit'
+// import Twit from 'twit'
+// import Twitter from 'twitter-v2'
+import {ETwitterStreamEvent, TwitterApi} from 'twitter-api-v2';
+
 import nconf from 'nconf'
 
 import * as discord from '../output/discord'
 import {config} from '../utils/config'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const twitterMetions = (mode: any) => {
-
-   let msgTemplate: string
-   const T = new Twit({
-    consumer_key: nconf.get("TWITTER_API_KEY"),
-    consumer_secret: nconf.get("TWITTER_API_SECRET"),
-    access_token: nconf.get("TWITTER_ACCESS_TOKEN"),
-    access_token_secret: nconf.get("TWITTER_ACCESS_TOKEN_SECRET")
-   })
-
-   const whiteListedUsers = [
-    '2170763245', // Rupali Doke
-    '1324641632', // Alan Johnson
-    '1375011044305874946', // SebGme92
-    '904268827927523328', // Rahul_2503
-    '1431215677604511751', // magxitoken
-    '318597303', // MarianMnt
-    '759100185297367040', // cryptomickbit
-    '767252878209744896', // senamakel
-    '804802806', // Akdite
-   ]
+export const twitterMetions = async(mode: any) => {
 
    const trackWords = [
     '$MAHA',
@@ -33,35 +16,55 @@ export const twitterMetions = (mode: any) => {
     '$ARTH'
    ]
 
-   const stream = T.stream('statuses/filter', {
-     follow: whiteListedUsers,
-     track: trackWords,
+  let msgTemplate: string
+  const discord_channel = config().staging.DISCORD
 
-    })
+  const clientv1 = new TwitterApi({
+      appKey: nconf.get("TWITTER_API_KEY"),
+      appSecret: nconf.get("TWITTER_API_SECRET"),
+      accessToken: nconf.get("TWITTER_ACCESS_TOKEN"),
+      accessSecret: nconf.get("TWITTER_ACCESS_TOKEN_SECRET")
+  }).v1
 
-   const discord_channel = config().staging.DISCORD
+  const clientv2 = new TwitterApi(nconf.get('BEARER_TOKEN')).v2
 
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-   stream.on('tweet', (tweet: any) => {
-    if(whiteListedUsers.includes(tweet.user.id_str) &&
-      (trackWords.some(word => tweet.text.includes(word))) &&
-        !tweet.retweeted && !tweet.retweeted_status && !tweet.in_reply_to_status_id &&
-        !tweet.in_reply_to_status_id_str && !tweet.in_reply_to_user_id &&
-        !tweet.in_reply_to_user_id_str && !tweet.in_reply_to_screen_name
-        ) {
-        console.log('tweet', tweet)
+  const followingListMahaDAO = await clientv2.following('1246916938678169600')
 
-        console.log('discord_channel', discord_channel)
-        msgTemplate = `${tweet.text}`
+  let whiteListedUsers = followingListMahaDAO.data.map(data => data.id)
 
-        discord.sendMessage(
-          mode === 'production' ? config().production.DISCORD.twitterMention : config().staging.DISCORD,
-          msgTemplate,
-          tweet.user)
+  whiteListedUsers = [...whiteListedUsers, '2170763245', '1038703148293124096']
+
+  console.log('whiteListedUsers', whiteListedUsers)
+
+ const streamFilter = await clientv1.filterStream(
+    { track: trackWords,
+      follow: whiteListedUsers,
+      // tweet_mode: 'extended'
+
+    });
+
+//  eslint-disable-next-line @typescript-eslint/no-explicit-any
+   streamFilter
+    .on(ETwitterStreamEvent.Data, (tweet: any) => {
+
+      if(whiteListedUsers.includes(tweet.user.id_str) &&
+        (trackWords.some(word => tweet.text.includes(word))) &&
+          !tweet.retweeted && !tweet.retweeted_status && !tweet.in_reply_to_status_id &&
+          !tweet.in_reply_to_status_id_str && !tweet.in_reply_to_user_id &&
+          !tweet.in_reply_to_user_id_str && !tweet.in_reply_to_screen_name
+          ) {
+          console.log('if tweet', tweet)
+          console.log('discord_channel', discord_channel)
+          msgTemplate = `${tweet.text}`
+
+          discord.sendMessage(
+            mode === 'production' ? config().production.DISCORD.twitterMention : config().staging.DISCORD,
+            msgTemplate,
+            tweet)
+        }
+      else{
+        console.log('not includes hence do not send')
       }
-    else{
-      console.log('not includes hence do not send')
-    }
-   })
+    })
 
 }

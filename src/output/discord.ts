@@ -30,33 +30,32 @@ client.on("messageCreate", (msg) => {
   if (msg.content.toLowerCase() == "maha") msg.channel.send("DAO");
 });
 
-client.user?.setUsername('Maha')
-
-const DISCORD_TOKEN = nconf.get('MAHA_DiscordClientToken') // for production
+// const DISCORD_TOKEN = nconf.get('MAHA_DiscordClientToken') // for production
 // const DISCORD_TOKEN = nconf.get('Test_DISCORD_TOKEN') // for testing
-
-console.log('DISCORD_TOKEN', DISCORD_TOKEN)
+const DISCORD_TOKEN = nconf.get('TweetMentionDiscordClientToken')
 
 client.login(DISCORD_TOKEN); //login bot using token
 
-export const sendMessage = (channelName: any, messageMarkdown: string, user?: any) => {
+export const sendMessage = (channelName: any, messageMarkdown: string, tweet?: any) => {
   const channel = client.channels.cache.get(channelName);
 
   let discordMsgEmbed: any
-  if(user){
-    console.log('if user')
+  if(tweet){
+    console.log('if tweet')
     // client.user?.setUsername(user.screen_name)
     // client.user?.setAvatar(user.profile_image_url)
     discordMsgEmbed = new MessageEmbed()
       .setColor("#F07D55")
+      .setTitle(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
       .setDescription(messageMarkdown)
       .setAuthor({
-        name: user ? user.name : '',
-        iconURL: user ? user.profile_image_url : ''
+        name: tweet ? tweet.user.name : '',
+        iconURL: tweet ? tweet.user.profile_image_url : ''
       })
+      .setURL(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
       .setFooter({
-        text: user ?'Twitter' : '',
-        iconURL: user ?  'https://i.imgur.com/7WCdDFw.png' : ''
+        text: tweet ?'Twitter' : '',
+        iconURL: tweet ?  'https://i2-prod.birminghammail.co.uk/incoming/article18471307.ece/ALTERNATES/s1200c/1_Twitter-new-icon-mobile-app.jpg' : ''
       })
       .setTimestamp()
 

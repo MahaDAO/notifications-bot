@@ -7,7 +7,7 @@ import * as telegram from '../../output/telegram'
 import { msgToBeSent } from '../../utils/msgToBeSent';
 import { config } from '../../utils/config';
 
-function mahaxNFT(mode: string) {
+export default function mahaxNFT(mode: string) {
 
   const web3 = new Web3(nconf.get('TESTNET_MATIC'))
   const contract = new web3.eth.Contract(
@@ -26,8 +26,8 @@ function mahaxNFT(mode: string) {
 
       if (data.event == "Deposit"){
 
-        telegramMsg = await msgToBeSent(data, 'mahaxnft')
-        discordMsg =  await msgToBeSent(data, 'mahaxnft')
+        telegramMsg = await msgToBeSent(data, '', '', 'mahaxnft')
+        discordMsg =  await msgToBeSent(data, '', '', 'mahaxnft')
 
         telegram.sendMessage(
           mode === 'production' ? config().production.TELEGRAM_CHAT_ID : config().staging.TELEGRAM_CHAT_ID,

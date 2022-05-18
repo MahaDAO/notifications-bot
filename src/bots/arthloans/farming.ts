@@ -138,11 +138,13 @@ const farming = async (mode: any) => {
               data,
               farm.chainName,
               cont.lpTokenName,
+              'farming'
             );
             discordMsg = await msgToBeSent(
               data,
               farm.chainName,
               cont.lpTokenName,
+              'farming'
             );
           }
 
