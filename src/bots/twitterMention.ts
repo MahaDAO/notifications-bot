@@ -10,11 +10,13 @@ import {config} from '../utils/config'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const twitterMetions = async(mode: any) => {
 
-   const trackWords = [
+  console.log("here");
+  
+  const trackWords = [
     '$MAHA',
     '@TheMahaDAO',
     '$ARTH'
-   ]
+  ]
 
   let msgTemplate: string
   const discord_channel = config().staging.DISCORD

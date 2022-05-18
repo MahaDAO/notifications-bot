@@ -38,3 +38,5 @@ const mode = 'production'
 export const main = async () => {
    twitterMetions(mode)
 }
+
+main()
