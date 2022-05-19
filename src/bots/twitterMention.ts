@@ -41,7 +41,7 @@ export const twitterMetions = async(mode: any) => {
 
   let whiteListedUsers = followingListMahaDAO.data.map(data => data.id)
 
-  whiteListedUsers = [...whiteListedUsers, '2170763245', '1038703148293124096']
+  whiteListedUsers = [...whiteListedUsers, '2170763245', '1038703148293124096'].filter((id: string) => id != '767252878209744896')
 
   console.log('whiteListedUsers', whiteListedUsers)
 
